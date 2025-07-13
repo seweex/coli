@@ -1,12 +1,30 @@
-//
-// Created by Seweex on 12.07.2025.
-//
+#include "coli/game/components/layer.h"
 
-#include "../../../include/coli/game/Layer.h"
+namespace Coli::Game::Components
+{
+    /* Layer */
 
-namespace Coli {
-namespace Game {
-namespace Components {
-} // Components
-} // Game
-} // Coli
+    Layer::Layer(const Layer&) noexcept = default;
+    Layer::Layer(Layer&&) noexcept = default;
+
+    Layer& Layer::operator=(const Layer&) noexcept = default;
+    Layer& Layer::operator=(Layer&&) noexcept = default;
+
+    Layer::~Layer() noexcept = default;
+
+    Layer::Layer() noexcept:
+        myValue (0)
+    {}
+
+    Layer::Layer(long long layer) noexcept :
+        myValue (layer)
+    {}
+
+    long long Layer::layer() const {
+        return myValue;
+    }
+
+    void Layer::layer(long long newValue) {
+        myValue = newValue;
+    }
+}
