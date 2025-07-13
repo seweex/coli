@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(EnTT REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/coli-game-engine-targets.cmake")
+
+check_required_components(coli-game-engine)
