@@ -34,6 +34,7 @@ It uses modern C++20 and based on ECS (Entity-Component-System).
 - **[Tests](#tests)**
 - **[Documentation](#documentation)**
 - **[Roadmap](#roadmap)**
+- **[Changelog](#changelog)**
 - **[License](#license)**
 
 ## Acknowledgments
@@ -194,6 +195,10 @@ There is a lot of work left. Some future features:
   - Transform
   - Graphics
   - Input
+
+## Changelog
+
+You can view the history of changes [there](CHANGES.md)
 
 ## License
 
