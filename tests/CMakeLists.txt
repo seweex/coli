@@ -5,6 +5,7 @@ find_package(GTest REQUIRED)
 set (COLI_TESTS
         src/object.cpp
         src/scene.cpp
+        src/components.cpp
 )
 
 add_executable(coli-tests ${COLI_TESTS})

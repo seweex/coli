@@ -3,8 +3,8 @@
 
 using namespace Coli;
 
-inline Game::Scene scene;
-inline Game::ObjectHandle object = nullptr;
+static Game::Scene scene;
+static Game::ObjectHandle object = nullptr;
 
 TEST(Object, Creation)
 {
