@@ -152,6 +152,8 @@ If you build the `coli` library as dynamic on `Windows` you have to copy the
 You can pass a few of the following options to `CMake` when you configure 
 the `coli` library to customize your build:
 
+- **COLI_FORCE_SINGLE_FLOAT**: Forced `float` type instead of default `double` if 
+  set to **ON**
 - **COLI_BUILD_DYNAMIC**: Set to **ON** for get `coli` as the dynamic library,
 otherwise it will be static.
 - **COLI_BUILD_DOCS**: Set to **ON** for generate the `doxygen` [documentation](#documentation).
