@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14...4.0.3)
-project(coli VERSION 0.1.1 LANGUAGES CXX)
+project(coli VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,15 +10,18 @@ include(GNUInstallDirs)
 option(COLI_BUILD_DYNAMIC "Build the library dynamic (shared)" OFF)
 option(COLI_BUILD_TESTS "Enable tests" OFF)
 option(COLI_BUILD_DOCS "Build documentation with library" OFF)
+option(COLI_FORCE_SINGLE_FLOAT "Forces `float` type instead of `double`" OFF)
 
 set (COLI_SOURCES
         src/game/components/layer.cpp
+        src/game/components/transform.cpp
 
         src/game/object.cpp
         src/game/scene.cpp
 
         src/generic/system.cpp
         src/generic/engine.cpp
+        src/utility.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
@@ -28,12 +31,15 @@ else ()
     add_library(coli-game-engine STATIC ${COLI_SOURCES})
 endif ()
 
+if (COLI_FORCE_SINGLE_FLOAT)
+    target_compile_definitions(coli-game-engine PRIVATE COLI_FORCE_SINGLE_FLOAT=1)
+endif ()
+
 if (${PROJECT_NAME} STREQUAL "coli")
     target_compile_definitions(coli-game-engine PRIVATE COLI_BUILD=1)
 else ()
     target_compile_definitions(coli-game-engine PRIVATE COLI_BUILD=0)
 endif ()
-
 
 add_library(coli::game-engine ALIAS coli-game-engine)
 
@@ -48,8 +54,12 @@ set_target_properties(coli-game-engine PROPERTIES
 )
 
 find_package(EnTT CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
-target_link_libraries(coli-game-engine PUBLIC EnTT::EnTT)
+target_link_libraries(coli-game-engine PUBLIC
+        EnTT::EnTT
+        glm::glm
+)
 target_include_directories(coli-game-engine PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>

@@ -62,7 +62,12 @@ namespace Coli::Game
             using type = std::remove_cvref_t<T>;
 
             if (auto const registry = myRegistry.lock()) [[likely]]
-                return registry->emplace_or_replace<type, Args...>(myHandle, std::forward<Args>(args)...);
+            {
+                if constexpr (sizeof...(Args) == 0)
+                    return registry->emplace_or_replace<type>(myHandle);
+                else
+                    return registry->emplace_or_replace<type, Args...>(myHandle, std::forward<Args>(args)...);{}
+            }
 
             fail_on_expired();
         }
@@ -142,6 +147,19 @@ namespace Coli::Game
                 return registry->view<type>().contains(myHandle);
 
             return false;
+        }
+
+        /**
+         * @brief Destroying a component of the T type if it exists
+         * @tparam T Type of component to destroy
+         */
+        template <class T>
+        void destroy() noexcept
+        {
+            using type = std::remove_cvref_t<T>;
+
+            if (auto const registry = myRegistry.lock()) [[likely]]
+                registry->remove<type>(myHandle);
         }
 
     private:

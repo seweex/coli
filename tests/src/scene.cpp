@@ -3,7 +3,7 @@
 
 using namespace Coli;
 
-inline Game::Scene scene;
+static Game::Scene scene;
 
 TEST(Scene, Ordering)
 {
