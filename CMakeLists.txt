@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.14...4.0.3)
 
 if (NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 else()
     if (CMAKE_CXX_STANDARD LESS 20)
-        message(WARNING "The 'coli' library requires C++20 or higher")
+        message(FATAL_ERROR "The 'coli' library requires C++20 or higher")
     endif()
 endif()
 
@@ -66,7 +66,7 @@ endif ()
 set_target_properties(coli-game-engine
     PROPERTIES
         VERSION ${COLI_VERSION_MAJOR}.${COLI_VERSION_MINOR}.${COLI_VERSION_PATCH}
-        CXX_STANDARD 20
+        CMAKE_CXX_STANDARD 20
         CMAKE_CXX_STANDARD_REQUIRED ON
 )
 

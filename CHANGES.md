@@ -13,7 +13,8 @@
 
 - QoL:
   - The library version is provided to code via dynamically generated `version.h`
-  - Improved the C++ standard control 
+  - Improved the C++ standard control
+  - Now `GTest` is not required to be installed as a package
 - Tests:
   - Added the new test case `version`
 

@@ -167,7 +167,7 @@ where `param` and `params` are the followed options
 
 ## Tests
 
-To compile and run the tests you must have `googletest` and set the option
+To compile and run the tests you must set the option
 `COLI_BUILD_TESTS` to `ON`. \
 To run the test if you have the `coli` library built with that option: 
 ```shell
