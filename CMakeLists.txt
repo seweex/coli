@@ -1,8 +1,19 @@
 cmake_minimum_required(VERSION 3.14...4.0.3)
-project(coli VERSION 0.1.2 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+else()
+    if (CMAKE_CXX_STANDARD LESS 20)
+        message(FATAL_ERROR "The 'coli' library requires C++20 or higher")
+    endif()
+endif()
+
+set(COLI_VERSION_MAJOR 0)
+set(COLI_VERSION_MINOR 1)
+set(COLI_VERSION_PATCH 3)
+
+project(coli VERSION ${COLI_VERSION_MAJOR}.${COLI_VERSION_MINOR}.${COLI_VERSION_PATCH} LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
@@ -41,6 +52,10 @@ else ()
     target_compile_definitions(coli-game-engine PRIVATE COLI_BUILD=0)
 endif ()
 
+target_compile_definitions(coli-game-engine PRIVATE COLI_VERSION_MAJOR=${PROJECT_VERSION_MAJOR})
+target_compile_definitions(coli-game-engine PRIVATE COLI_VERSION_MINOR=${PROJECT_VERSION_MINOR})
+target_compile_definitions(coli-game-engine PRIVATE COLI_VERSION_PATCH=${PROJECT_VERSION_PATCH})
+
 add_library(coli::game-engine ALIAS coli-game-engine)
 
 if (COLI_BUILD_TESTS)
@@ -48,9 +63,11 @@ if (COLI_BUILD_TESTS)
     add_subdirectory(tests)
 endif ()
 
-set_target_properties(coli-game-engine PROPERTIES
-        VERSION ${PROJECT_VERSION}
-        PUBLIC_HEADER "${COLI_HEADERS}"
+set_target_properties(coli-game-engine
+    PROPERTIES
+        VERSION ${COLI_VERSION_MAJOR}.${COLI_VERSION_MINOR}.${COLI_VERSION_PATCH}
+        CMAKE_CXX_STANDARD 20
+        CMAKE_CXX_STANDARD_REQUIRED ON
 )
 
 find_package(EnTT CONFIG REQUIRED)
@@ -70,6 +87,11 @@ install(TARGETS coli-game-engine
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+configure_file(
+        version.h.in
+        ${CMAKE_SOURCE_DIR}/include/coli/version.h
 )
 
 install(DIRECTORY include/coli

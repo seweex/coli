@@ -9,7 +9,16 @@
 
 ## Changelogs
 
-### v0.1.2 - **Current**
+### v0.1.3 - **Current**
+
+- QoL:
+  - The library version is provided to code via dynamically generated `version.h`
+  - Improved the C++ standard control
+  - Now `GTest` is not required to be installed as a package
+- Tests:
+  - Added the new test case `version`
+
+### v0.1.2 - 
 
 - Components:
   - Added `Trasform` component. It provides 2D and 3D world transformation based on
