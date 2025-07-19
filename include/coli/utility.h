@@ -1,6 +1,8 @@
 #ifndef COLI_UTILITY_H
 #define COLI_UTILITY_H
 
+#include "coli/version.h"
+
 #if COLI_DYNAMIC && _WIN32
     #if COLI_BUILD
         #define COLI_EXPORT __declspec(dllexport)

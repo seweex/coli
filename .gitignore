@@ -2,3 +2,4 @@
 build
 vcpkg-configuration.json
 vcpkg.json
+include/coli/version.h

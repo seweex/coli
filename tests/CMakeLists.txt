@@ -6,6 +6,7 @@ set (COLI_TESTS
         src/object.cpp
         src/scene.cpp
         src/components.cpp
+        src/version.cpp
 )
 
 add_executable(coli-tests ${COLI_TESTS})
