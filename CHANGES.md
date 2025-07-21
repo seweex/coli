@@ -9,7 +9,14 @@
 
 ## Changelogs
 
-### v0.1.3 - **Current**
+### v0.2.0 - **Current**
+
+- Graphics:
+  - Added base for graphics system 
+  - New dependency [`glfw3`](https://github.com/glfw/glfw)
+  - New target `coli-glad`. The source code was generated [here](https://glad.dav1d.de/). 
+
+### v0.1.3
 
 - QoL:
   - The library version is provided to code via dynamically generated `version.h`
