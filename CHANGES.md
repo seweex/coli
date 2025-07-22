@@ -12,9 +12,11 @@
 ### v0.2.0 - **Current**
 
 - Graphics:
-  - Added base for graphics system 
+  - Added base for graphics system (context) powered by OpenGL
   - New dependency [`glfw3`](https://github.com/glfw/glfw)
-  - New target `coli-glad`. The source code was generated [here](https://glad.dav1d.de/). 
+  - New target `coli-glad`. The source code was generated [here](https://glad.dav1d.de/)
+- Tests:
+  - Context test
 
 ### v0.1.3
 

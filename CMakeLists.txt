@@ -33,6 +33,7 @@ set (COLI_SOURCES
         src/generic/system.cpp
         src/generic/engine.cpp
         src/utility.cpp
+        src/graphics/context.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
@@ -72,13 +73,18 @@ set_target_properties(coli-game-engine
 
 add_subdirectory(libs/glad)
 
+target_compile_definitions(coli-game-engine PRIVATE COLI_OPENGL_VERSION_MAJOR=${GLAD_OPENGL_VERSION_MAJOR})
+target_compile_definitions(coli-game-engine PRIVATE COLI_OPENGL_VERSION_MINOR=${GLAD_OPENGL_VERSION_MINOR})
+
 find_package(EnTT CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 
 target_link_libraries(coli-game-engine PUBLIC
+        coli::glad
         EnTT::EnTT
         glm::glm
-        coli::glad
+        glfw
 )
 
 target_include_directories(coli-game-engine PUBLIC
