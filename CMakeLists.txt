@@ -10,10 +10,10 @@ else()
 endif()
 
 set(COLI_VERSION_MAJOR 0)
-set(COLI_VERSION_MINOR 1)
-set(COLI_VERSION_PATCH 3)
+set(COLI_VERSION_MINOR 2)
+set(COLI_VERSION_PATCH 0)
 
-project(coli VERSION ${COLI_VERSION_MAJOR}.${COLI_VERSION_MINOR}.${COLI_VERSION_PATCH} LANGUAGES CXX)
+project(coli VERSION ${COLI_VERSION_MAJOR}.${COLI_VERSION_MINOR}.${COLI_VERSION_PATCH} LANGUAGES CXX C)
 
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
@@ -24,6 +24,8 @@ option(COLI_BUILD_DOCS "Build documentation with library" OFF)
 option(COLI_FORCE_SINGLE_FLOAT "Forces `float` type instead of `double`" OFF)
 
 set (COLI_SOURCES
+        src/utility.cpp
+
         src/game/components/layer.cpp
         src/game/components/transform.cpp
 
@@ -32,7 +34,10 @@ set (COLI_SOURCES
 
         src/generic/system.cpp
         src/generic/engine.cpp
-        src/utility.cpp
+
+        src/graphics/context.cpp
+        src/graphics/resource.cpp
+        src/graphics/window.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
@@ -70,13 +75,22 @@ set_target_properties(coli-game-engine
         CMAKE_CXX_STANDARD_REQUIRED ON
 )
 
+add_subdirectory(libs/glad)
+
+target_compile_definitions(coli-game-engine PRIVATE COLI_OPENGL_VERSION_MAJOR=${GLAD_OPENGL_VERSION_MAJOR})
+target_compile_definitions(coli-game-engine PRIVATE COLI_OPENGL_VERSION_MINOR=${GLAD_OPENGL_VERSION_MINOR})
+
 find_package(EnTT CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 
 target_link_libraries(coli-game-engine PUBLIC
+        coli::glad
         EnTT::EnTT
         glm::glm
+        glfw
 )
+
 target_include_directories(coli-game-engine PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>

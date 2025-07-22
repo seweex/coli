@@ -20,10 +20,16 @@
 #include <typeindex>
 #include <string>
 #include <string_view>
+#include <thread>
+#include <mutex>
 
 #define GLM_ENABLE_EXPERIMENTAL
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include <entt/entt.hpp>
+
 #include <glm/glm.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/quaternion.hpp>

@@ -43,6 +43,8 @@ This project uses the following open-source solutions:
 
 - **[EnTT](https://github.com/skypjack/entt)**: Based on provided ECS (License: MIT)
 - **[glm](https://github.com/g-truc/glm)**: Uses the glm math (License: Modified MIT)
+- **[glfw](https://github.com/glfw/glfw)**: Manages windows and the context (License: Zlib)
+- **[glad](https://glad.dav1d.de/)**: Loads OpenGL functions. Automatically generated.
 
 ## Examples
 
@@ -105,15 +107,18 @@ int main()
     // launch the game loop
     engine.run();
 }
-
 ```
 
 ## Setup
 
 ### Requirements
 
-Before you install the `coli` library make sure you have all [the following
-libs](#acknowledgments), and it is able to `find_package()` for all of them.
+Before you install the `coli` library make sure you have all the following
+libs, and it is able to `find_package()` for all of them:
+
+- `EnTT`
+- `glm`
+- `glfw`
 
 Also, you must have:
 - `C++20` or higher compiler 
