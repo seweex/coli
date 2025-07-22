@@ -21,7 +21,7 @@ namespace Coli::Graphics::inline OpenGL
     };
 
     void Context::fail_incorrect_thread() {
-        throw std::runtime_error("Call is not from the creation thread");
+        throw std::logic_error("Call is not from the creation thread");
     }
 
     void Context::fail_already_exists() {
@@ -30,6 +30,10 @@ namespace Coli::Graphics::inline OpenGL
 
     void Context::fail_initialize_error() {
         throw std::runtime_error("Failed to initialize context");
+    }
+
+    void Context::fail_not_owner() {
+        throw std::invalid_argument("This class instance is not owning the context");
     }
 
     void Context::fail_not_ready() {
@@ -83,17 +87,60 @@ namespace Coli::Graphics::inline OpenGL
         }
     }
 
+    void Context::load_opengl(GLFWwindow* handle)
+    {
+        std::lock_guard glfw { Tools::GLFW::mutex };
+        std::lock_guard glad { Tools::GLAD::mutex };
+
+        if (!Tools::GLAD::initialized)
+        {
+            glfwMakeContextCurrent(handle);
+
+            if (!gladLoadGL())
+                fail_initialize_error();
+
+            Tools::GLAD::initialized = true;
+        }
+    }
+
+    void Context::register_window(GLFWwindow* handle)
+    {
+        if (!myIsOwner)
+            fail_not_owner();
+
+        load_opengl(handle);
+        myHasWindow = true;
+    }
+
+    void Context::unregister_window() noexcept {
+        if (myIsOwner) {
+            glfwMakeContextCurrent(nullptr);
+            myHasWindow = false;
+        }
+    }
+
     void Context::verify_thread() const {
         if (myCreationThread != std::this_thread::get_id())
             fail_incorrect_thread();
     }
 
     void Context::verify_context() const {
-        if (!Tools::GLFW::initialized ||
-            !Tools::GLAD::initialized ||
+        if (!Tools::GLAD::initialized ||
             !myHasWindow ||
             !myIsOwner
         )
             fail_not_ready();
+    }
+
+    bool Context::has_window() const
+    {
+        if (myIsOwner)
+            return myHasWindow;
+
+        fail_not_owner();
+    }
+
+    bool Context::is_owning() const noexcept {
+        return myIsOwner;
     }
 }

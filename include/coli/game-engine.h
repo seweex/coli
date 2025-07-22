@@ -12,5 +12,6 @@
 #include "coli/generic/engine.h"
 
 #include "coli/graphics/context.h"
+#include "coli/graphics/window.h"
 
 #endif

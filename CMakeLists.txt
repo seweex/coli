@@ -24,6 +24,8 @@ option(COLI_BUILD_DOCS "Build documentation with library" OFF)
 option(COLI_FORCE_SINGLE_FLOAT "Forces `float` type instead of `double`" OFF)
 
 set (COLI_SOURCES
+        src/utility.cpp
+
         src/game/components/layer.cpp
         src/game/components/transform.cpp
 
@@ -32,10 +34,10 @@ set (COLI_SOURCES
 
         src/generic/system.cpp
         src/generic/engine.cpp
-        src/utility.cpp
+
         src/graphics/context.cpp
-        include/coli/graphics/window.h
         src/graphics/resource.cpp
+        src/graphics/window.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)

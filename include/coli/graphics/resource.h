@@ -24,8 +24,10 @@ namespace Coli::Graphics::Detail::inline OpenGL
             "Qualified or refs types are not allowed");
 
     protected:
+        [[noreturn]] static void fail_call_on_invalid();
+
         ResourceBase(
-            std::shared_ptr<Graphics::OpenGL::Context>&& context,
+            std::shared_ptr<Graphics::OpenGL::Context> context,
             handle_type handle,
             DeleterTy&& deleter = {}
         ) noexcept(std::is_nothrow_move_constructible_v<DeleterTy>);
@@ -50,6 +52,12 @@ namespace Coli::Graphics::Detail::inline OpenGL
     private:
         DeleterTy myDeleter;
     };
+
+#if COLI_BUILD
+#else
+    extern template class COLI_EXPORT ResourceBase
+        <GLFWwindow*, void(*)(Graphics::OpenGL::Context&, GLFWwindow*) noexcept>;
+#endif
 }
 
 #endif

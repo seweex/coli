@@ -14,8 +14,13 @@ namespace Coli::Graphics::Detail::inline OpenGL
     )
 
     _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    void ResourceBase<HandleTy, DeleterTy>::fail_call_on_invalid() {
+        throw std::invalid_argument("Call on the invalid handle");
+    }
+
+    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     ResourceBase<HandleTy, DeleterTy>::ResourceBase(
-        std::shared_ptr<Graphics::OpenGL::Context>&& context,
+        std::shared_ptr<Graphics::OpenGL::Context> context,
         handle_type handle,
         DeleterTy&& deleter
     ) noexcept (std::is_nothrow_move_constructible_v<DeleterTy>) :
@@ -79,4 +84,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
 
         myHandle = handle_type {};
     }
+
+    template class COLI_EXPORT ResourceBase
+        <GLFWwindow*, void(*)(Graphics::OpenGL::Context&, GLFWwindow*) noexcept>;
 }
