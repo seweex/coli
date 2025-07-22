@@ -34,6 +34,8 @@ set (COLI_SOURCES
         src/generic/engine.cpp
         src/utility.cpp
         src/graphics/context.cpp
+        include/coli/graphics/window.h
+        src/graphics/resource.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)

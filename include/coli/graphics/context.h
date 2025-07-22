@@ -10,6 +10,8 @@ namespace Coli::Graphics::inline OpenGL
      *
      * @warning This class blocks access from different threads
      * @warning Only one existing instance of this class is allowed
+     *
+     * @note You must create this class via std::make_shared
      */
     class COLI_EXPORT Context final
     {
@@ -19,6 +21,10 @@ namespace Coli::Graphics::inline OpenGL
         [[noreturn]] static void fail_not_ready();
 
         class Tools;
+
+        friend class Window;
+
+        void register_window(GLFWwindow* handle) noexcept;
 
     public:
         /**
