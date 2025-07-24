@@ -2,23 +2,23 @@
 
 namespace Coli::Graphics::Detail::inline OpenGL
 {
-#ifdef _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
-#undef _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+#ifdef COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+#undef COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
 #endif
 
-#define _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER \
+#define COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER \
     template <std::regular HandleTy, class DeleterTy> \
     requires ( \
         std::is_nothrow_invocable_v<DeleterTy, Context&, HandleTy> && \
         std::is_move_constructible_v<DeleterTy> \
     )
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     void ResourceBase<HandleTy, DeleterTy>::fail_call_on_invalid() {
         throw std::invalid_argument("Call on the invalid handle");
     }
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     ResourceBase<HandleTy, DeleterTy>::ResourceBase(
         std::shared_ptr<Graphics::OpenGL::Context> context,
         handle_type handle,
@@ -29,7 +29,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
         myDeleter (std::move(deleter))
     {}
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     ResourceBase<HandleTy, DeleterTy>::ResourceBase(ResourceBase&& other)
         noexcept(false) requires std::is_nothrow_move_constructible_v<DeleterTy>
     :
@@ -40,7 +40,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
         other.myHandle = handle_type{};
     }
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     ResourceBase<HandleTy, DeleterTy>& ResourceBase<HandleTy, DeleterTy>::operator=(ResourceBase&& other)
         noexcept(false) requires std::is_nothrow_move_assignable_v<DeleterTy>
     {
@@ -57,12 +57,12 @@ namespace Coli::Graphics::Detail::inline OpenGL
         return *this;
     }
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     ResourceBase<HandleTy, DeleterTy>::~ResourceBase() noexcept {
         clear();
     }
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     std::shared_ptr<Graphics::OpenGL::Context> ResourceBase<HandleTy, DeleterTy>::verify(
         std::shared_ptr<Graphics::OpenGL::Context>&& context
     ) {
@@ -72,12 +72,12 @@ namespace Coli::Graphics::Detail::inline OpenGL
         return context;
     }
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     bool ResourceBase<HandleTy, DeleterTy>::is_valid() const noexcept {
         return myHandle != handle_type {};
     }
 
-    _COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
+    COLI_GRAPHICS_RESOURCE_TEMPLATE_HEADER
     void ResourceBase<HandleTy, DeleterTy>::clear() noexcept {
         if (is_valid())
             std::invoke(myDeleter, *myContext, myHandle);
