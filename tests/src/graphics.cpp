@@ -29,6 +29,16 @@ TEST(Graphics, ContextValidationWithWindow)
     EXPECT_NO_THROW(context->verify_context());
 }
 
+TEST(Graphics, BufferCreation)
+{
+    ASSERT_NO_THROW(context->verify_context());
+
+    std::unique_ptr<Graphics::VertexBuffer> buffer;
+
+    EXPECT_NO_THROW(buffer = std::make_unique<Graphics::VertexBuffer>(context));
+    EXPECT_TRUE(buffer->is_valid());
+}
+
 TEST(Graphics, WindowDestroying)
 {
     ASSERT_TRUE(window);

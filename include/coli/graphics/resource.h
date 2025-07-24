@@ -57,7 +57,44 @@ namespace Coli::Graphics::Detail::inline OpenGL
 #else
     extern template class COLI_EXPORT ResourceBase
         <GLFWwindow*, void(*)(Graphics::OpenGL::Context&, GLFWwindow*) noexcept>;
+
+    extern template class COLI_EXPORT ResourceBase
+        <GLuint, void(*)(Graphics::OpenGL::Context&, GLuint) noexcept>;
 #endif
+}
+
+namespace Coli::Graphics::inline OpenGL
+{
+    /**
+     * @brief Provides RAII resources binding handle
+     * @tparam Ty Type of object to handle binding
+     */
+    template <class Ty>
+        requires (requires (Ty& obj)
+    {
+        obj.bind();
+        obj.unbind();
+    })
+    class COLI_EXPORT Binding final
+    {
+    public:
+        explicit Binding(Ty& object) : myObject(object) {
+            myObject.bind();
+        }
+
+        ~Binding() noexcept {
+            myObject.unbind();
+        }
+
+        Binding(Binding const&) = delete;
+        Binding(Binding&&) = delete;
+
+        Binding& operator=(Binding const&) = delete;
+        Binding& operator=(Binding&&) = delete;
+
+    private:
+        Ty& myObject;
+    };
 }
 
 #endif

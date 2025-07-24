@@ -87,4 +87,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
 
     template class COLI_EXPORT ResourceBase
         <GLFWwindow*, void(*)(Graphics::OpenGL::Context&, GLFWwindow*) noexcept>;
+
+    template class COLI_EXPORT ResourceBase
+        <GLuint, void(*)(Graphics::OpenGL::Context&, GLuint) noexcept>;
 }

@@ -9,7 +9,12 @@
 
 ## Changelogs
 
-### v0.2.0 - **Current**
+### v0.2.1 - **Current**
+
+- Graphics:
+  - New `buffer` and `storage` resources
+
+### v0.2.0
 
 - Graphics:
   - New base class for graphic resources 
@@ -29,7 +34,7 @@
 - Tests:
   - Added the new test case `version`
 
-### v0.1.2 - 
+### v0.1.2
 
 - Components:
   - Added `Trasform` component. It provides 2D and 3D world transformation based on
