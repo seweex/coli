@@ -13,6 +13,7 @@
 
 - Graphics:
   - New `buffer` and `storage` resources
+  - RAII resource binding wrapper
 
 ### v0.2.0
 
