@@ -92,10 +92,10 @@ namespace Coli::Graphics::inline OpenGL
         std::lock_guard glfw { Tools::GLFW::mutex };
         std::lock_guard glad { Tools::GLAD::mutex };
 
+        glfwMakeContextCurrent(handle);
+
         if (!Tools::GLAD::initialized)
         {
-            glfwMakeContextCurrent(handle);
-
             if (!gladLoadGL())
                 fail_initialize_error();
 
