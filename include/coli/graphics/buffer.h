@@ -41,7 +41,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
 
     public:
         /**
-         * @brief Destroys the window
+         * @brief Destroys the buffer
          *
          * @param context The context that was used to create a buffer/storage
          * @param handle The buffer/storage handle
