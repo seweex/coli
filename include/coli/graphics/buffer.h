@@ -73,9 +73,6 @@ namespace Coli::Graphics::Detail::inline OpenGL
         BufferFactory& operator=(const BufferFactory&) = delete;
         BufferFactory& operator=(BufferFactory&&) = delete;
     };
-
-    template <Graphics::OpenGL::BufferType Type>
-    class BufferBindings;
 }
 
 namespace Coli::Graphics::inline OpenGL
@@ -88,7 +85,7 @@ namespace Coli::Graphics::inline OpenGL
      */
     template <BufferType Type, bool Mutable>
         requires (Detail::OpenGL::ValidBufferType<Type>::value)
-    class BasicBuffer final :
+    class COLI_EXPORT BasicBuffer final :
         public Detail::OpenGL::BufferFactory::resource_type
     {
         using factory_type = Detail::OpenGL::BufferFactory;
