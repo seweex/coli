@@ -39,6 +39,7 @@ set (COLI_SOURCES
         src/graphics/resource.cpp
         src/graphics/window.cpp
         src/graphics/buffer.cpp
+        src/graphics/shader.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
