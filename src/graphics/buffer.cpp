@@ -40,9 +40,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
         context->verify_context();
 
         GLuint handle = 0;
-        std::cout << glGetError() << std::endl;
         glCreateBuffers(1, &handle);
-        std::cout << glGetError() << std::endl;
 
         if (handle == 0)
             fail_initialization_error();
