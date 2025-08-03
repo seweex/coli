@@ -9,11 +9,24 @@
 
 ## Changelogs
 
-### v0.2.1 - **Current**
+### v0.2.2 - **Current**
+
+- Graphics:
+  - New resource: `shader`
+- Tests:
+  - Added tests for the `shader` resource
+- Fixes:
+  - Removed `glGetError()` output in `BufferFactory::create()`
+
+### v0.2.1
 
 - Graphics:
   - New `buffer` and `storage` resources
   - RAII resource binding wrapper
+- Tests:
+  - Added tests for `buffer`
+  - Moved `components` tests into `object`
+  - Upgraded, grouped, and refactored all tests
 
 ### v0.2.0
 
