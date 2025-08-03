@@ -9,7 +9,16 @@
 
 ## Changelogs
 
-### v0.2.1 - **Current**
+### v0.2.2 - **Current**
+
+- Graphics:
+  - New resource: `shader`
+- Tests:
+  - Added tests for the `shader` resource
+- Fixes:
+  - Removed `glGetError()` output in `BufferFactory::create()`
+
+### v0.2.1
 
 - Graphics:
   - New `buffer` and `storage` resources
