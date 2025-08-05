@@ -9,7 +9,12 @@
 
 ## Changelogs
 
-### v0.2.3 - **Current**
+### v0.2.4 - **Current**
+
+- Graphics:
+  - New `Vertex Array` resource
+
+### v0.2.3
 
 - Graphics:
   - New `Program` resource
