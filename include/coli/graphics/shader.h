@@ -95,6 +95,8 @@ namespace Coli::Graphics::inline OpenGL
 
         friend class Program;
 
+        [[nodiscard]] GLuint get_handle() const noexcept;
+
     public:
         /**
          * @brief Creates a valid shader and compile it with your

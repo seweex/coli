@@ -79,6 +79,11 @@ namespace Coli::Graphics::inline OpenGL
     template <OpenGL::ShaderType Type> requires (Detail::OpenGL::ValidShaderType<Type>::value)
     BasicShader<Type>::~BasicShader() noexcept = default;
 
+    template <OpenGL::ShaderType Type> requires (Detail::OpenGL::ValidShaderType<Type>::value)
+    GLuint BasicShader<Type>::get_handle() const noexcept {
+        return myHandle;
+    }
+
     template class COLI_EXPORT BasicShader<ShaderType::vertex>;
     template class COLI_EXPORT BasicShader<ShaderType::fragment>;
 }
