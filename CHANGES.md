@@ -9,7 +9,18 @@
 
 ## Changelogs
 
-### v0.2.2 - **Current**
+### v0.2.3 - **Current**
+
+- Graphics:
+  - New `Program` resource
+- Tests:
+  - Added tests for the new `Program` resource
+- Docs:
+  - Now the `BasicShader` class has a description
+- Errors:
+  - The `BasicShader` class throws an exception if the compilation failed
+
+### v0.2.2
 
 - Graphics:
   - New resource: `shader`
