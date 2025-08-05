@@ -94,7 +94,7 @@ namespace Coli::Graphics::inline OpenGL
         using resource_base = typename factory_type::resource_type;
 
         friend class Coli::Graphics::Detail::OpenGL::ProgramFactory;
-        
+
         [[nodiscard]] GLuint get_handle() const noexcept;
 
     public:
