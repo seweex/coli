@@ -11,7 +11,7 @@ endif()
 
 set(COLI_VERSION_MAJOR 0)
 set(COLI_VERSION_MINOR 2)
-set(COLI_VERSION_PATCH 3)
+set(COLI_VERSION_PATCH 4)
 
 project(coli VERSION ${COLI_VERSION_MAJOR}.${COLI_VERSION_MINOR}.${COLI_VERSION_PATCH} LANGUAGES CXX C)
 
@@ -41,6 +41,8 @@ set (COLI_SOURCES
         src/graphics/buffer.cpp
         src/graphics/shader.cpp
         src/graphics/program.cpp
+        src/graphics/vertex_array.cpp
+        src/geometry/vertex.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
