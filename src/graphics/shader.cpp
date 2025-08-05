@@ -14,6 +14,10 @@ namespace Coli::Graphics::Detail::inline OpenGL
         throw std::invalid_argument("Invalid source code");
     }
 
+    void ShaderFactory::fail_compile_error() {
+        throw std::runtime_error("Failed to compile the shader");
+    }
+
     void ShaderFactory::destroy(Graphics::OpenGL::Context& context, GLuint handle) noexcept
     {
         if (handle != 0)
@@ -47,6 +51,13 @@ namespace Coli::Graphics::Detail::inline OpenGL
         auto const size = static_cast<GLint>(source.size());
 
         glShaderSource(handle, 1, &data, &size);
+        glCompileShader(handle);
+
+        GLint status;
+        glGetShaderiv(handle, GL_COMPILE_STATUS, std::addressof(status));
+
+        if (status != GL_TRUE)
+            fail_compile_error();
 
         return handle;
     }
@@ -67,6 +78,11 @@ namespace Coli::Graphics::inline OpenGL
 
     template <OpenGL::ShaderType Type> requires (Detail::OpenGL::ValidShaderType<Type>::value)
     BasicShader<Type>::~BasicShader() noexcept = default;
+
+    template <OpenGL::ShaderType Type> requires (Detail::OpenGL::ValidShaderType<Type>::value)
+    GLuint BasicShader<Type>::get_handle() const noexcept {
+        return myHandle;
+    }
 
     template class COLI_EXPORT BasicShader<ShaderType::vertex>;
     template class COLI_EXPORT BasicShader<ShaderType::fragment>;
