@@ -12,11 +12,12 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-add_executable(coli-test-graphics-context   src/graphics/context.cpp)
-add_executable(coli-test-graphics-window    src/graphics/window.cpp)
-add_executable(coli-test-graphics-buffer    src/graphics/buffer.cpp)
-add_executable(coli-test-graphics-shader    src/graphics/shader.cpp)
-add_executable(coli-test-graphics-program   src/graphics/program.cpp)
+add_executable(coli-test-graphics-context        src/graphics/context.cpp)
+add_executable(coli-test-graphics-window         src/graphics/window.cpp)
+add_executable(coli-test-graphics-buffer         src/graphics/buffer.cpp)
+add_executable(coli-test-graphics-shader         src/graphics/shader.cpp)
+add_executable(coli-test-graphics-program        src/graphics/program.cpp)
+add_executable(coli-test-graphics-vertex-array   src/graphics/vertex_array.cpp)
 
 add_executable(coli-test-game-object    src/game/object.cpp)
 add_executable(coli-test-game-scene     src/game/scene.cpp)
@@ -27,6 +28,7 @@ set (COLI_ALL_TEST_NAMES
         coli-test-graphics-buffer
         coli-test-graphics-shader
         coli-test-graphics-program
+        coli-test-graphics-vertex-array
 
         coli-test-game-object
         coli-test-game-scene
@@ -45,6 +47,7 @@ add_test(NAME coli-graphics-window COMMAND coli-test-graphics-window)
 add_test(NAME coli-graphics-buffer COMMAND coli-test-graphics-buffer)
 add_test(NAME coli-graphics-shader COMMAND coli-test-graphics-shader)
 add_test(NAME coli-graphics-program COMMAND coli-test-graphics-program)
+add_test(NAME coli-graphics-vertex-array COMMAND coli-test-graphics-vertex-array)
 
 add_test(NAME coli-game-object COMMAND coli-test-game-object)
 add_test(NAME coli-game-scene COMMAND coli-test-game-scene)

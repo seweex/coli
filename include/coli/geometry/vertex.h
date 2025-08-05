@@ -84,8 +84,8 @@ namespace Coli::Geometry
 
 #if COLI_BUILD
 #else
-    extern template class COLI_EXPORT Vertex<false>;
-    extern template class COLI_EXPORT Vertex<true>;
+    extern template struct COLI_EXPORT Vertex<false>;
+    extern template struct COLI_EXPORT Vertex<true>;
 #endif
 
     using Vertex2D = Vertex<true>;
@@ -130,28 +130,30 @@ namespace Coli::Geometry
         using has_normal = std::conditional_t
             <requires { std::declval<vertex_type>().normal; }, std::true_type, std::false_type>;
 
-        using normal_type = std::conditional_t<
-            has_normal::value,
-            decltype(std::declval<vertex_type>().normal),
-            void
-        >;
+        using normal_type = decltype ([] {
+            if constexpr (has_normal::value)
+                return std::declval<vertex_type>().normal;
+            else
+                return void();
+        }());
 
-        using normal_float_type = std::conditional_t<
-            has_normal::value,
-            decltype(std::declval<normal_type>().x),
-            void
-        >;
+        using normal_float_type = decltype ([] {
+            if constexpr (has_normal::value)
+                return std::declval<normal_type>().x;
+            else
+                return void();
+        }());
 
         [[nodiscard]] static constexpr size_t position_offset() noexcept {
-            return offsetof(position_type, position);
+            return offsetof(vertex_type, position);
         }
 
         [[nodiscard]] static constexpr size_t texcoord_offset() noexcept {
-            return offsetof(texcoord_type, texcoord);
+            return offsetof(vertex_type, texcoord);
         }
 
         [[nodiscard]] static constexpr size_t normal_offset() noexcept requires (has_normal::value) {
-            return offsetof(normal_type, normal);
+            return offsetof(vertex_type, normal);
         }
 
         [[nodiscard]] static constexpr size_t position_size() noexcept {
