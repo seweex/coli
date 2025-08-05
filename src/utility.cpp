@@ -27,16 +27,3 @@ namespace Coli::inline Types
             return std::rotl(h1, 5) ^ std::rotl(h2, 17) + 0x9e3779b9;
     }
 }
-
-namespace std
-{
-    template <glm::length_t L, class T, glm::qualifier Q>
-    size_t hash<glm::vec<L, T, Q>>::operator()(const glm::vec<L, T, Q>& v) const noexcept
-
-
-    template <class T, glm::qualifier Q>
-    size_t hash<glm::qua<T, Q>>::operator()(const glm::qua<T, Q>& v) const noexcept
-    {
-
-    }
-}
