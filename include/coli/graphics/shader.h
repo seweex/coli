@@ -81,6 +81,7 @@ namespace Coli::Graphics::inline OpenGL
 {
     class Program;
 
+    /// @brief OpenGL shader class
     template <OpenGL::ShaderType Type>
         requires (Detail::OpenGL::ValidShaderType<Type>::value)
     class COLI_EXPORT BasicShader final :
