@@ -1,10 +1,21 @@
 #ifndef COLI_GRAPHICS_VERTEX_ARRAY_H
 #define COLI_GRAPHICS_VERTEX_ARRAY_H
 
+#include "coli/geometry/vertex.h"
 #include "coli/graphics/buffer.h"
+
+namespace Coli::Graphics::inline OpenGL {
+    class VertexArray;
+}
 
 namespace Coli::Graphics::Detail::inline OpenGL
 {
+    struct VertexAttributes final {
+        size_t length;
+        size_t offset;
+        GLenum type;
+    };
+
     /**
      * @brief A factory class for creating OpenGL vertex arrays
      *
@@ -15,6 +26,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
     {
         [[noreturn]] static void fail_initialization_error();
         [[noreturn]] static void fail_invalid_context();
+        [[noreturn]] static void fail_invalid_storage();
 
     public:
         /**
@@ -38,6 +50,28 @@ namespace Coli::Graphics::Detail::inline OpenGL
          */
         [[nodiscard]] static GLuint create(std::shared_ptr<Graphics::OpenGL::Context>& context);
 
+        /**
+         * @brief Configures the newly created vertex array
+         *
+         * @param array The created vertex array object
+         * @param vertices The vertices storage
+         * @param indices The indices storage
+         * @param vertexAttributes The vector of vertex attributes
+         * @param vertexSize The size of the vertex
+         *
+         * @throw std::invalid_argument If vertices pointer is invalid
+         * @throw std::invalid_argument If indices pointer is invalid
+         * @throw std::invalid_argument If vertex attributes has size smaller than 2
+         * @throw std::invalid_argument If vertex size is invalid
+         */
+        static void configure(
+            Graphics::OpenGL::VertexArray& array,
+            std::shared_ptr<VertexStorage>& vertices,
+            std::shared_ptr<IndexStorage>& indices,
+            std::vector<VertexAttributes> const& vertexAttributes,
+            size_t vertexSize
+        );
+
         using deleter_type = decltype(&destroy);
         using resource_type = ResourceBase<GLuint, deleter_type>;
 
@@ -60,6 +94,49 @@ namespace Coli::Graphics::inline OpenGL
         using factory_type = Detail::OpenGL::VertexArrayFactory;
         using resource_base = typename factory_type::resource_type;
 
+        template <class VertexTy>
+        void configure()
+        {
+            using traits_type = Geometry::VertexTraits<VertexTy>;
+            constexpr size_t max_vertex_attributes = 3; // pos + uv + normal
+
+            auto floatEnumerator = [] <typename Ty> (Ty&&) -> GLenum {
+                if constexpr (std::same_as<Ty, float>)
+                    return GL_FLOAT;
+                else if constexpr (std::same_as<Ty, double>)
+                    return GL_DOUBLE;
+                else
+                    static_assert(false, "invalid floating point type");
+            };
+
+            std::vector<Detail::OpenGL::VertexAttributes> attributes;
+            attributes.reserve(max_vertex_attributes);
+
+            attributes.emplace_back(
+                traits_type::position_length(),
+                traits_type::position_offset(),
+                floatEnumerator(typename traits_type::position_float_type{})
+            );
+
+            attributes.emplace_back(
+                traits_type::texcoord_length(),
+                traits_type::texcoord_offset(),
+                floatEnumerator(typename traits_type::texcoord_float_type{})
+            );
+
+            if constexpr (traits_type::has_normal::value)
+                attributes.emplace_back(
+                    traits_type::normal_length(),
+                    traits_type::normal_offset(),
+                    floatEnumerator(typename traits_type::texcoord_float_type{})
+                );
+
+            factory_type::configure(*this, myVertices,
+                myIndices, attributes, traits_type::stride());
+        }
+
+        class Binding;
+
     public:
         /**
          * @brief Creates a valid vertex array
@@ -67,6 +144,7 @@ namespace Coli::Graphics::inline OpenGL
          * @param context The valid context to check it is loaded
          * @param vertices The valid pointer to vertices to use
          * @param indices The valid pointer to indices to use
+         * @param vertexExample The example of vertex type
          *
          * @throw std::invalid_argument If the context is invalid
          * @throw std::invalid_argument If the vertices pointer is invalid
@@ -74,12 +152,21 @@ namespace Coli::Graphics::inline OpenGL
          *
          * @throw std::logic_error If calls not from the context creation thread
          * @throw std::runtime_error If initialization fails
+         * @throw std::bad_alloc If allocation fails
          */
+        template <class VertexTy>
         VertexArray(
             std::shared_ptr<Context> context,
             std::shared_ptr<VertexStorage> vertices,
-            std::shared_ptr<IndexStorage> indices
-        );
+            std::shared_ptr<IndexStorage> indices,
+            [[maybe_unused]] VertexTy const& vertexExample
+        ) :
+            resource_base(context, factory_type::create(context), &factory_type::destroy),
+            myVertices (std::move(vertices)),
+            myIndices  (std::move(indices))
+        {
+            configure<VertexTy>();
+        }
 
         /**
          * @brief Accepts a moved vertex array

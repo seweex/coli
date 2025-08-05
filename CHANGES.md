@@ -11,6 +11,10 @@
 
 ### v0.2.4 - **Current**
 
+- Graphics:
+  - New `Vertex Array` resource
+- Tests:
+  - New `Vertex Array` tests
 - Geometry:
   - New namespace `Coli::Geometry` for geometry features
   - New `Vertex` struct and its traits `VertexTraits`
