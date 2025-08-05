@@ -18,6 +18,8 @@ namespace Coli::Graphics::inline OpenGL
 
 namespace Coli::Graphics::Detail::inline OpenGL
 {
+    class ProgramFactory;
+
     template <Graphics::OpenGL::ShaderType Type>
     struct ValidShaderType : public std::bool_constant<
         (Type == Graphics::OpenGL::ShaderType::vertex) ||
@@ -82,8 +84,6 @@ namespace Coli::Graphics::Detail::inline OpenGL
 
 namespace Coli::Graphics::inline OpenGL
 {
-    class Program;
-
     /// @brief OpenGL shader class
     template <OpenGL::ShaderType Type>
         requires (Detail::OpenGL::ValidShaderType<Type>::value)
@@ -93,8 +93,8 @@ namespace Coli::Graphics::inline OpenGL
         using factory_type = Detail::OpenGL::ShaderFactory;
         using resource_base = typename factory_type::resource_type;
 
-        friend class Program;
-
+        friend class Coli::Graphics::Detail::OpenGL::ProgramFactory;
+        
         [[nodiscard]] GLuint get_handle() const noexcept;
 
     public:
