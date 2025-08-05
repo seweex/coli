@@ -35,6 +35,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
         [[noreturn]] static void fail_initialization_error();
         [[noreturn]] static void fail_invalid_context();
         [[noreturn]] static void fail_invalid_source();
+        [[noreturn]] static void fail_compile_error();
 
     public:
         /**
@@ -50,12 +51,14 @@ namespace Coli::Graphics::Detail::inline OpenGL
          *
          * @param context The valid context to check it loaded
          * @param type The shader type
+         * @param source The shader source code
          *
          * @throw std::invalid_argument If the context is invalid
          * @throw std::invalid_argument If the source is empty or too large
          *
          * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::runtime_error If initialization fails
+         * @throw std::runtime_error If the initialization fails
+         * @throw std::runtime_error If the compilation fails
          *
          * @return A valid raw handle to the newly created shader
          */
