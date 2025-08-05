@@ -42,6 +42,7 @@ set (COLI_SOURCES
         src/graphics/shader.cpp
         src/graphics/program.cpp
         src/graphics/vertex_array.cpp
+        src/geometry/vertex.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
