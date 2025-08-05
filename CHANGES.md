@@ -9,7 +9,13 @@
 
 ## Changelogs
 
-### v0.2.4 - **Current**
+### v0.2.5 - **Current**
+
+- Geometry:
+  - Added hash functions for `glm::vec`, `glm::qua`, and `glm::mat`
+  - Also, here is a hash func for `Coli::Geometry::Vertex`
+
+### v0.2.4
 
 - Graphics:
   - New `Vertex Array` resource

@@ -18,4 +18,25 @@ namespace Coli::inline Types
 
     template COLI_EXPORT rotator_type<false> make_zero_rotation<false>() noexcept;
     template COLI_EXPORT rotator_type<true> make_zero_rotation<true>() noexcept;
+
+    size_t HashMixer::operator()(size_t h1, size_t h2) const noexcept
+    {
+        if constexpr (sizeof(size_t) == 8)
+            return std::rotl(h1, 13) ^ std::rotl(h2, 37) + 0x9e3779b97f4a7c15;
+        else
+            return std::rotl(h1, 5) ^ std::rotl(h2, 17) + 0x9e3779b9;
+    }
+}
+
+namespace std
+{
+    template <glm::length_t L, class T, glm::qualifier Q>
+    size_t hash<glm::vec<L, T, Q>>::operator()(const glm::vec<L, T, Q>& v) const noexcept
+
+
+    template <class T, glm::qualifier Q>
+    size_t hash<glm::qua<T, Q>>::operator()(const glm::qua<T, Q>& v) const noexcept
+    {
+
+    }
 }

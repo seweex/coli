@@ -22,6 +22,7 @@
 #include <string_view>
 #include <thread>
 #include <mutex>
+#include <bit>
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -57,6 +58,53 @@ namespace Coli::inline Types
     extern template COLI_EXPORT rotator_type<false> make_zero_rotation<false>() noexcept;
     extern template COLI_EXPORT rotator_type<true> make_zero_rotation<true>() noexcept;
 #endif
+
+    class COLI_EXPORT HashMixer final
+    {
+    public:
+        [[nodiscard]] size_t operator()(size_t h1, size_t h2) const noexcept;
+    };
+}
+
+namespace std
+{
+    template <glm::length_t L, class T, glm::qualifier Q>
+    struct hash<glm::vec<L, T, Q>> final
+    {
+        [[nodiscard]] size_t operator()(const glm::vec<L, T, Q>& v) const noexcept
+        {
+            Coli::HashMixer const mixer;
+            size_t hash;
+
+            for (glm::length_t i = 0; i < L; ++i)
+                hash = mixer(hash, std::hash<T>()(v[i]));
+
+            return hash;
+        }
+    };
+
+    template <class T, glm::qualifier Q>
+    struct hash<glm::qua<T, Q>> final
+    {
+        [[nodiscard]] size_t operator()(const glm::qua<T, Q>& v) const noexcept {
+            return std::hash<glm::vec<4, T, Q>>()(glm::vec<4, T, Q>{ v.x, v.y, v.z, v.w });
+        }
+    };
+
+    template <glm::length_t C, glm::length_t R, class T, glm::qualifier Q>
+    struct hash<glm::mat<C, R, T, Q>> final
+    {
+        [[nodiscard]] size_t operator()(const glm::mat<C, R, T, Q>& v) const noexcept
+        {
+            Coli::HashMixer const mixer;
+            size_t hash;
+
+            for (glm::length_t i = 0; i < C; ++i)
+                hash = mixer(hash, std::hash<std::remove_cvref_t<decltype(v[i])>>()(v[i]));
+
+            return hash;
+        }
+    };
 }
 
 #endif

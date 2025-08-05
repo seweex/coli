@@ -186,4 +186,18 @@ namespace Coli::Geometry
     };
 }
 
+namespace std
+{
+    template <bool Is2D>
+    struct COLI_EXPORT std::hash <Coli::Geometry::Vertex<Is2D>> final {
+        [[nodiscard]] size_t operator()(Coli::Geometry::Vertex<Is2D> const& vertex) const noexcept;
+    };
+
+#if COLI_BUILD
+#else
+    extern template struct COLI_EXPORT hash<Coli::Geometry::Vertex<false>>;
+    extern template struct COLI_EXPORT hash<Coli::Geometry::Vertex<true>>;
+#endif
+}
+
 #endif
