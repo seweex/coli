@@ -18,7 +18,10 @@ namespace Coli::inline Types
 
     template COLI_EXPORT rotator_type<false> make_zero_rotation<false>() noexcept;
     template COLI_EXPORT rotator_type<true> make_zero_rotation<true>() noexcept;
+}
 
+namespace Coli::Utility
+{
     size_t HashMixer::operator()(size_t h1, size_t h2) const noexcept
     {
         if constexpr (sizeof(size_t) == 8)
@@ -26,4 +29,12 @@ namespace Coli::inline Types
         else
             return std::rotl(h1, 5) ^ std::rotl(h2, 17) + 0x9e3779b9;
     }
+
+    template class COLI_EXPORT Hash<Types::float_type>;
+
+    template class COLI_EXPORT Hash<Types::vector_type<true>>;
+    template class COLI_EXPORT Hash<Types::vector_type<false>>;
+
+    template class COLI_EXPORT Hash<Types::rotator_type<true>>;
+    template class COLI_EXPORT Hash<Types::rotator_type<false>>;
 }

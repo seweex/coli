@@ -16,4 +16,7 @@
 #include "coli/graphics/buffer.h"
 #include "coli/graphics/shader.h"
 
+#include "coli/geometry/vertex.h"
+#include "coli/geometry/mesh.hpp"
+
 #endif
