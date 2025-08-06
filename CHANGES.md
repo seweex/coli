@@ -9,7 +9,11 @@
 
 ## Changelogs
 
-### v0.2.6 - **Current**
+### v0.2.7 - **Current**
+ 
+- Totally reworked all documentation.
+
+### v0.2.6
 
 - Fixes:
   - Fixed the normals detecting in vertices
