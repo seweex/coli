@@ -39,6 +39,9 @@ namespace Coli::Geometry
         Vertex& operator=(Vertex const&) noexcept;
         Vertex& operator=(Vertex&&) noexcept;
 
+        [[nodiscard]] bool operator==(Vertex const&) const noexcept;
+        [[nodiscard]] bool operator!=(Vertex const&) const noexcept;
+
         position_type position;
         texcoord_type texcoord;
     };
@@ -77,6 +80,9 @@ namespace Coli::Geometry
         Vertex& operator=(Vertex const&) noexcept;
         Vertex& operator=(Vertex&&) noexcept;
 
+        [[nodiscard]] bool operator==(Vertex const&) const noexcept;
+        [[nodiscard]] bool operator!=(Vertex const&) const noexcept;
+
         position_type position;
         normal_type normal;
         texcoord_type texcoord;
@@ -112,6 +118,18 @@ namespace Coli::Geometry
     template <Detail::VertexType VertexTy>
     class VertexTraits final
     {
+        template <class VertexTy2, bool Exists>
+        struct normal_properties final {
+            using vector_type = void;
+            using scalar_type = void;
+        };
+
+        template <class VertexTy2>
+        struct normal_properties <VertexTy2, true> final {
+            using vector_type = decltype(std::declval<VertexTy2>().normal);
+            using scalar_type = decltype(std::declval<vector_type>().x);
+        };
+
     public:
         using vertex_type = VertexTy;
 
@@ -127,22 +145,11 @@ namespace Coli::Geometry
         static_assert(std::is_floating_point_v<texcoord_float_type>,
             "texcoord must be a floating point vector");
 
-        using has_normal = std::conditional_t
-            <requires { std::declval<vertex_type>().normal; }, std::true_type, std::false_type>;
+        using has_normal = std::conditional_t<
+            requires (vertex_type vertex) { vertex.normal; }, std::true_type, std::false_type>;
 
-        using normal_type = decltype ([] {
-            if constexpr (has_normal::value)
-                return std::declval<vertex_type>().normal;
-            else
-                return void();
-        }());
-
-        using normal_float_type = decltype ([] {
-            if constexpr (has_normal::value)
-                return std::declval<normal_type>().x;
-            else
-                return void();
-        }());
+        using normal_type = typename normal_properties<vertex_type, has_normal::value>::vector_type;
+        using normal_float_type = typename normal_properties<vertex_type, has_normal::value>::scalar_type;
 
         [[nodiscard]] static constexpr size_t position_offset() noexcept {
             return offsetof(vertex_type, position);
@@ -184,6 +191,22 @@ namespace Coli::Geometry
             return sizeof(vertex_type);
         }
     };
+}
+
+namespace Coli::Utility
+{
+    template <bool Is2D>
+    class COLI_EXPORT Hash<Geometry::Vertex<Is2D>> final
+    {
+    public:
+        [[nodiscard]] size_t operator()(Geometry::Vertex<Is2D> const& vertex) const noexcept;
+    };
+
+#if COLI_BUILD
+#else
+    extern template class COLI_EXPORT Hash<Geometry::Vertex<false>>;
+    extern template class COLI_EXPORT Hash<Geometry::Vertex<true>>;
+#endif
 }
 
 #endif

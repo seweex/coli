@@ -9,7 +9,25 @@
 
 ## Changelogs
 
-### v0.2.4 - **Current**
+### v0.2.6 - **Current**
+
+- Fixes:
+  - Fixed the normals detecting in vertices
+  - Removed the redundant explicit template instances of `Vertex`
+  - Moved the math hash functions from `std::hash` to `Coli::Utility::Hash`
+- Tests:
+  - Fixed comparing in the `MeshTest.CreateAlreadyUnique` test
+
+### v0.2.5 
+
+- Geometry:
+  - Added hash functions for `glm::vec`, `glm::qua`, and `glm::mat`
+  - Also, here is a hash func for `Coli::Geometry::Vertex`
+  - Added `Mesh` class
+- Tests:
+  - Added tests for `Mesh`
+
+### v0.2.4
 
 - Graphics:
   - New `Vertex Array` resource

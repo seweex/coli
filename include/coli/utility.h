@@ -22,6 +22,7 @@
 #include <string_view>
 #include <thread>
 #include <mutex>
+#include <bit>
 
 #define GLM_ENABLE_EXPERIMENTAL
 
@@ -56,6 +57,72 @@ namespace Coli::inline Types
 #else
     extern template COLI_EXPORT rotator_type<false> make_zero_rotation<false>() noexcept;
     extern template COLI_EXPORT rotator_type<true> make_zero_rotation<true>() noexcept;
+#endif
+}
+
+namespace Coli::Utility
+{
+    class COLI_EXPORT HashMixer final
+    {
+    public:
+        [[nodiscard]] size_t operator()(size_t h1, size_t h2) const noexcept;
+    };
+
+    template <class Ty>
+    class COLI_EXPORT Hash final :
+        public std::hash<Ty>
+    {};
+
+    template <glm::length_t L, class T, glm::qualifier Q>
+    class COLI_EXPORT Hash<glm::vec<L, T, Q>> final
+    {
+    public:
+        [[nodiscard]] size_t operator()(const glm::vec<L, T, Q>& v) const noexcept
+        {
+            constexpr HashMixer mixer;
+            size_t hash;
+
+            for (glm::length_t i = 0; i < L; ++i)
+                hash = mixer(hash, Hash<T>()(v[i]));
+
+            return hash;
+        }
+    };
+
+    template <class T, glm::qualifier Q>
+    class COLI_EXPORT Hash<glm::qua<T, Q>> final
+    {
+    public:
+        [[nodiscard]] size_t operator()(const glm::qua<T, Q>& v) const noexcept {
+            return Hash<glm::vec<4, T, Q>>()(glm::vec<4, T, Q>{ v.x, v.y, v.z, v.w });
+        }
+    };
+
+    template <glm::length_t C, glm::length_t R, class T, glm::qualifier Q>
+    class COLI_EXPORT Hash<glm::mat<C, R, T, Q>> final
+    {
+    public:
+        [[nodiscard]] size_t operator()(const glm::mat<C, R, T, Q>& v) const noexcept
+        {
+            constexpr HashMixer mixer;
+            size_t hash;
+
+            for (glm::length_t i = 0; i < C; ++i)
+                hash = mixer(hash, Hash<std::remove_cvref_t<decltype(v[i])>>()(v[i]));
+
+            return hash;
+        }
+    };
+
+#if COLI_BUILD
+#else
+    extern template class COLI_EXPORT Hash<Types::float_type>;
+
+    extern template class COLI_EXPORT Hash<Types::vector_type<true>>;
+    extern template class COLI_EXPORT Hash<Types::vector_type<false>>;
+
+    extern template class COLI_EXPORT Hash<Types::rotator_type<true>>;
+    extern template class COLI_EXPORT Hash<Types::rotator_type<false>>;
 #endif
 }
 
