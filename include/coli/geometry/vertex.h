@@ -39,8 +39,8 @@ namespace Coli::Geometry
         Vertex& operator=(Vertex const&) noexcept;
         Vertex& operator=(Vertex&&) noexcept;
 
-        [[nodiscard]] bool operator==(Vertex const&) const noexcept = default;
-        [[nodiscard]] bool operator!=(Vertex const&) const noexcept = default;
+        [[nodiscard]] bool operator==(Vertex const&) const noexcept;
+        [[nodiscard]] bool operator!=(Vertex const&) const noexcept;
 
         position_type position;
         texcoord_type texcoord;
@@ -80,8 +80,8 @@ namespace Coli::Geometry
         Vertex& operator=(Vertex const&) noexcept;
         Vertex& operator=(Vertex&&) noexcept;
 
-        [[nodiscard]] bool operator==(Vertex const&) const noexcept = default;
-        [[nodiscard]] bool operator!=(Vertex const&) const noexcept = default;
+        [[nodiscard]] bool operator==(Vertex const&) const noexcept;
+        [[nodiscard]] bool operator!=(Vertex const&) const noexcept;
 
         position_type position;
         normal_type normal;
