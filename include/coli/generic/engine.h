@@ -32,14 +32,14 @@ namespace Coli::Generic
          *
          * @return A weak smart pointer to current const active scene or expired if no scene
          */
-        _NODISCARD std::weak_ptr<Game::Scene const> active_scene() const noexcept;
+        [[nodiscard]] std::weak_ptr<Game::Scene const> active_scene() const noexcept;
 
         /**
          * @copybrief active_scene() const
          *
          * @return A weak smart pointer to current active scene or expired if no scene
          */
-        _NODISCARD std::weak_ptr<Game::Scene> active_scene() noexcept;
+        [[nodiscard]] std::weak_ptr<Game::Scene> active_scene() noexcept;
 
         /**
          * @brief Sets the current active scene
@@ -98,7 +98,7 @@ namespace Coli::Generic
          * @return A weak pointer to the const system if it exists, otherwise an expired pointer
          */
         template <class T>
-        _NODISCARD std::weak_ptr<std::remove_cvref_t<T> const> get_system() const noexcept
+        [[nodiscard]] std::weak_ptr<std::remove_cvref_t<T> const> get_system() const noexcept
         {
             using type = std::remove_cvref_t<T>;
 
@@ -118,7 +118,7 @@ namespace Coli::Generic
          * @return A weak pointer to the system if it exists, otherwise an expired pointer
          */
         template <class T>
-        _NODISCARD std::weak_ptr<std::remove_cvref_t<T>> get_system() noexcept {
+        [[nodiscard]] std::weak_ptr<std::remove_cvref_t<T>> get_system() noexcept {
             return std::const_pointer_cast<std::remove_cvref_t<T>>(std::as_const(*this).get_system<T>().lock());
         }
 

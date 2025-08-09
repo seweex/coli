@@ -35,6 +35,5 @@ namespace Coli::Utility
     template class COLI_EXPORT Hash<Types::vector_type<true>>;
     template class COLI_EXPORT Hash<Types::vector_type<false>>;
 
-    template class COLI_EXPORT Hash<Types::rotator_type<true>>;
     template class COLI_EXPORT Hash<Types::rotator_type<false>>;
 }
