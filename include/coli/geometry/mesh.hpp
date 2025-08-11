@@ -124,7 +124,7 @@ namespace Coli::Geometry
          * @return Span of unique vertices stored in the mesh.
          */
         [[nodiscard]] std::span<VertexTy const> get_vertices() const noexcept {
-            return myVertices;
+            return { myVertices.begin(), myVertices.size() };
         }
 
         /**
@@ -134,7 +134,7 @@ namespace Coli::Geometry
          * @return Span of indices stored in the mesh.
          */
         [[nodiscard]] std::span<unsigned const> get_indices() const noexcept {
-            return myIndices;
+            return { myIndices.begin(), myIndices.size() };
         }
 
         /**
