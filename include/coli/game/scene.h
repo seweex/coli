@@ -4,9 +4,13 @@
 #include "coli/utility.h"
 #include "coli/game/object.h"
 
+/// @brief Namespace for the all game-related stuff.
 namespace Coli::Game
 {
-    /// @warning This namespace and all contained there should not be used by the user
+    /**
+     * @brief For internal details.
+     * @note The user should not use this namespace.
+     */
     namespace Detail
     {
         class COLI_EXPORT ObjectsOrderer final
@@ -77,52 +81,78 @@ namespace Coli::Game
     }
 
     /**
-     * @brief The class of scene for objects containing
+     * @brief Game scene class.
+     * @details Supposed to contain game objects and supports their order.
      *
-     * @warning This class is not thread-safe
-     */
+     * @note Not thread-safe. Concurrent access requires
+     * external synchronization.
+    */
     class COLI_EXPORT Scene final
     {
     public:
-        /// @throw std::bad_alloc If allocation fails
+        /**
+         * @brief Creates scene.
+         * @details Creates an empty scene. You can create
+         * and destroy game objects. They stored inside scene.
+         */
         Scene();
 
-        Scene(Scene&&) noexcept;
+        /**
+         * @brief Moves scene.
+         * @details Moves the scene. Copies the other scene and resets it.
+         *
+         * @param other Other scene.
+         */
+        Scene(Scene&& other) noexcept;
         Scene(Scene const&) = delete;
 
-        Scene& operator=(Scene &&) noexcept;
+        /**
+         * @brief Moves scene.
+         * @details Moves the scene. Copies the other's objects scene and resets they.
+         *
+         * @param other Other scene.
+         */
+        Scene& operator=(Scene && other) noexcept;
         Scene& operator=(Scene const&) = delete;
 
+        /**
+         * @brief Destroys scene.
+         * @details Destroys the scene and all its entities.
+         */
         ~Scene() noexcept;
 
         /**
-         * @brief Creates an object and returns it handle
+         * @brief Creates entity in scene.
+         * @details Creates an entity inside the scene and returns a
+         * handle to the newly created entity.
          *
-         * @throw std::bad_alloc If allocation fails
+         * @throw std::bad_alloc If allocation fails.
          *
-         * @return A handle to newly created object
+         * @return Valid handle to newly created entity.
          */
         [[nodiscard]] ObjectHandle create();
 
         /**
-         * @brief Destroys the object
+         * @brief Destroys entity in scene.
+         * @details Destroys the entity inside the scene handled
+         * by the specific handle.
          *
-         * @param handle A handle to object
-         *
-         * @note If an invalid handle passed the method does nothing
+         * @param handle Handle to the entity to destroy.
          */
         void destroy(ObjectHandle handle) noexcept;
 
         /**
-         * @brief Returns all objects ordered by layer value.
-         * Objects that don't have a layer value will be placed at the end.
+         * @brief Returns ordered objects.
+         * @details Orders all storing objects by its layer value
+         * and returns the sorted handles. If object has no layer
+         * it will be placed in the end.
          *
-         * @throw std::bad_alloc If allocation fails
+         * @throw std::bad_alloc If allocation fails.
          *
-         * @return A buffer of ordered objects
+         * @return Ordered object's handles.
          *
-         * @warning The returned buffer is valid until the next call of this method
-         *      with any T param and any const method modifier
+         * @note Returned buffer is valid until the next call of this
+         * method or its overloads.
          */
         [[nodiscard]] std::vector<ObjectHandle> const& ordered() const;
 
@@ -130,16 +160,16 @@ namespace Coli::Game
         [[nodiscard]] std::vector<ObjectHandle>& ordered();
 
         /**
-         * @brief Returns all objects that have a component of the type T
+         * @brief Returns filtered objects.
+         * @details Filters all storing objects and returns handles to
+         * the objects that have T component inside.
          *
-         * @tparam T A type of component the object should have
+         * @throw std::bad_alloc If allocation fails.
          *
-         * @throw std::bad_alloc If allocation fails
+         * @return Filtered object's handles.
          *
-         * @return A buffer of filtered objects
-         *
-         * @warning The returned buffer is valid until the next call of this method
-         *      with any T param and any const method modifier
+         * @note Returned buffer is valid until the next call of this
+         * method or its overloads.
          */
         template <class T>
         [[nodiscard]] std::vector<ObjectHandle> const& filtered() const {

@@ -1,5 +1,6 @@
 .idea
 build
+cmake-build-debug
 Testing
 CMakeUserPresets.json
 vcpkg-configuration.json
