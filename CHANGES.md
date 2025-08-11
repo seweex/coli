@@ -9,7 +9,15 @@
 
 ## Changelogs
 
-### v0.2.6 - **Current**
+### v0.2.7 - **Current**
+
+- Fixes:
+  - Fixed the `MeshTest.CreateAndUnique` result checking
+  - Replaced the `_NODISCARD` macro to the `[[nodiscard]]` attribute
+  on some functions
+  - Removed the second template instance of `Hash<float_type>`
+
+### v0.2.6
 
 - Fixes:
   - Fixed the normals detecting in vertices
