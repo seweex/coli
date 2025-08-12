@@ -43,6 +43,10 @@ set (COLI_SOURCES
         src/graphics/program.cpp
         src/graphics/vertex_array.cpp
         src/geometry/vertex.cpp
+
+        src/physics/world.cpp
+        src/physics/body.cpp
+        src/graphics/shape.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)

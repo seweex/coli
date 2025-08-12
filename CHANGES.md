@@ -15,6 +15,9 @@
   - Removed grouping tests
 - Dependencies:
   - New dependency: `bullet3`
+- Physics:
+  - Added new physical opportunities: `World`, `Body`, and 
+    geometry `Shape`
 
 ### v0.2.7 - **Current**
 

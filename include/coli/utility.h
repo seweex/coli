@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <vector>
+#include <variant>
 #include <concepts>
 #include <algorithm>
 #include <typeindex>
@@ -35,6 +36,10 @@
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/btBulletCollisionCommon.h>
+#include <bullet/BulletCollision/CollisionShapes/btBox2dShape.h>
 
 /**
  * @brief For internal types.
