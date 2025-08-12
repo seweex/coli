@@ -44,8 +44,21 @@ namespace Coli::Graphics::Detail::inline OpenGL
 
         ~ResourceBase() noexcept;
 
+        /**
+         * @brief Checks validity.
+         * @detail Checks the resource validity.
+         *
+         * @return Checking result.
+         *
+         * @retval True If the resource valid;
+         * @retval False Otherwise.
+         */
         [[nodiscard]] bool is_valid() const noexcept;
 
+        /**
+         * @brief Resets resource.
+         * @detail Resets and destroys the resource and all its data.
+         */
         void clear() noexcept;
 
     protected:
