@@ -56,25 +56,4 @@ add_test(NAME coli-graphics-vertex-array COMMAND coli-test-graphics-vertex-array
 add_test(NAME coli-game-object COMMAND coli-test-game-object)
 add_test(NAME coli-game-scene COMMAND coli-test-game-scene)
 
-add_test(NAME coli-geometry-mesh COMMAND coli-test-geometry-mesh )
-
-add_test(NAME coli-graphics
-    COMMAND
-        ${CMAKE_CTEST_COMMAND}
-        --output-on-failure
-        -R "^coli-graphics-"
-)
-
-add_test(NAME coli-game
-    COMMAND
-        ${CMAKE_CTEST_COMMAND}
-        --output-on-failure
-        -R "^coli-game-"
-)
-
-add_test(NAME coli-geometry
-        COMMAND
-        ${CMAKE_CTEST_COMMAND}
-        --output-on-failure
-        -R "^coli-geometry-"
-)
+add_test(NAME coli-geometry-mesh COMMAND coli-test-geometry-mesh)

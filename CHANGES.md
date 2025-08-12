@@ -9,6 +9,11 @@
 
 ## Changelogs
 
+### v0.2.8 - **Under develop**
+
+- Tests:
+  - Removed grouping tests
+
 ### v0.2.7 - **Current**
 
 - Fixes:
