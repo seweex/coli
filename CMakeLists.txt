@@ -88,12 +88,14 @@ target_compile_definitions(coli-game-engine PRIVATE COLI_OPENGL_VERSION_MINOR=${
 find_package(EnTT CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
+find_package(Bullet CONFIG REQUIRED)
 
 target_link_libraries(coli-game-engine PUBLIC
         coli::glad
         EnTT::EnTT
         glm::glm
         glfw
+        ${BULLET_LIBRARIES}
 )
 
 target_include_directories(coli-game-engine PUBLIC

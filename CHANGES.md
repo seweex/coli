@@ -13,6 +13,8 @@
 
 - Tests:
   - Removed grouping tests
+- Dependencies:
+  - New dependency: `bullet3`
 
 ### v0.2.7 - **Current**
 
