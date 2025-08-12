@@ -14,8 +14,11 @@
 - Fixes:
   - Fixed the `MeshTest.CreateAndUnique` result checking
   - Replaced the `_NODISCARD` macro to the `[[nodiscard]]` attribute
-  on some functions
+    on some functions
+  - Fixed `Hash` random results
   - Removed the second template instance of `Hash<float_type>`
+- Docs:
+  - Totally reworked and improved all docs in all headers
 
 ### v0.2.6
 
