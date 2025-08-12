@@ -36,6 +36,10 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+/**
+ * @brief For internal types.
+ * @note The user should not use this namespace.
+ */
 namespace Coli::inline Types
 {
 #if COLI_FORCE_SINGLE_FLOAT
@@ -60,19 +64,32 @@ namespace Coli::inline Types
 #endif
 }
 
+/// @brief Namespace for the library utilities stuff.
 namespace Coli::Utility
 {
+    /**
+     * @brief Hash mixer.
+     * @details Functor for mixing hashes.
+     */
     class COLI_EXPORT HashMixer final
     {
     public:
         [[nodiscard]] size_t operator()(size_t h1, size_t h2) const noexcept;
     };
 
+    /**
+     * @brief Hash func.
+     * @details Just a hash function. Refers to std::hash.
+     */
     template <class Ty>
     class COLI_EXPORT Hash final :
         public std::hash<Ty>
     {};
 
+    /**
+     * @brief Hash func for glm vectors.
+     * @details Represents hash function for glm vectors.
+     */
     template <glm::length_t L, class T, glm::qualifier Q>
     class COLI_EXPORT Hash<glm::vec<L, T, Q>> final
     {
@@ -89,6 +106,10 @@ namespace Coli::Utility
         }
     };
 
+    /**
+     * @brief Hash func for glm quaternions.
+     * @details Represents hash function for glm quaternions.
+     */
     template <class T, glm::qualifier Q>
     class COLI_EXPORT Hash<glm::qua<T, Q>> final
     {
@@ -98,6 +119,10 @@ namespace Coli::Utility
         }
     };
 
+    /**
+     * @brief Hash func for glm matrices.
+     * @details Represents hash function for glm matrices.
+     */
     template <glm::length_t C, glm::length_t R, class T, glm::qualifier Q>
     class COLI_EXPORT Hash<glm::mat<C, R, T, Q>> final
     {
