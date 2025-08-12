@@ -3,22 +3,30 @@
 
 #include "coli/graphics/resource.h"
 
+/// @brief Namespace for the all OpenGL-based stuff.
 namespace Coli::Graphics::inline OpenGL
 {
-    /// @brief Enumerator for qualifying the buffer/storage data type
+    /**
+     * @brief Buffer data type.
+     * @details Enumerator for qualifying the buffer data type.
+     */
     enum class BufferType
     {
-        /// @brief Make the buffer store vertices
+        /// @brief Make the buffer store vertices.
         vertex = GL_ARRAY_BUFFER,
 
-        /// @brief Make the buffer store indices for indexing vertices
+        /// @brief Make the buffer store indices for indexing vertices.
         index = GL_ELEMENT_ARRAY_BUFFER,
 
-        /// @brief Make the buffer store shaders uniform data
+        /// @brief Make the buffer store shaders uniform data.
         uniform = GL_UNIFORM_BUFFER
     };
 }
 
+/**
+ * @brief For internal details.
+ * @note The user should not use this namespace.
+ */
 namespace Coli::Graphics::Detail::inline OpenGL
 {
     template <Graphics::OpenGL::BufferType Type>
@@ -28,37 +36,14 @@ namespace Coli::Graphics::Detail::inline OpenGL
         (Type == Graphics::OpenGL::BufferType::uniform)
     > {};
 
-    /**
-     * @brief A factory class for creating OpenGL buffers
-     *
-     * @warning This class and all its methods are not supposed to be used by the user
-     * @note This class does not allow instances
-     */
     class BufferFactory final
     {
         [[noreturn]] static void fail_initialization_error();
         [[noreturn]] static void fail_invalid_context();
 
     public:
-        /**
-         * @brief Destroys the buffer
-         *
-         * @param context The context that was used to create a buffer/storage
-         * @param handle The buffer/storage handle
-         */
         static void destroy(Graphics::OpenGL::Context& context, GLuint handle) noexcept;
 
-        /**
-         * @brief Creates an OpenGL buffer/storage
-         *
-         * @param context The valid context to check it loaded
-         *
-         * @throw std::invalid_argument If the context is invalid
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::runtime_error If initialization fails
-         *
-         * @return A valid raw handle to the newly created buffer/storage
-         */
         [[nodiscard]] static GLuint
         create(std::shared_ptr<Graphics::OpenGL::Context>& context);
 
@@ -75,13 +60,18 @@ namespace Coli::Graphics::Detail::inline OpenGL
     };
 }
 
+/// @brief Namespace for the all OpenGL-based stuff.
 namespace Coli::Graphics::inline OpenGL
 {
     /**
-     * @brief The OpenGL buffer/storage class
+     * @brief OpenGL buffer class.
+     * @detail Represent the buffer of qualified data.
      *
-     * @tparam Type The qualification of the storing data
-     * @tparam Mutable Allows you to change the buffer data
+     * @tparam Type Qualification of the stored data.
+     * @tparam Mutable Allows you to change the buffer data.
+     *
+     * @note Does not allow multithreading. You should use
+     * this class from the thread where you created the context.
      */
     template <BufferType Type, bool Mutable>
         requires (Detail::OpenGL::ValidBufferType<Type>::value)
@@ -95,32 +85,33 @@ namespace Coli::Graphics::inline OpenGL
 
     public:
         /**
-         * @brief Creates an empty valid buffer
+         * @brief Creates empty buffer.
+         * @detail Cerates a valid buffer without any data.
          *
-         * @param context The valid context to check it is loaded
+         * @param context The valid context to check it is loaded.
          *
-         * @throw std::invalid_argument If the context is invalid
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::runtime_error If initialization fails
+         * @throw std::invalid_argument If the context is invalid;
+         * @throw std::logic_error If calls not from the context creation thread;
+         * @throw std::runtime_error If initialization fails.
          *
-         * @warning You can not create an empty storage (immutable buffer)
+         * @note You can create an empty buffer only if it's mutable.
          */
         BasicBuffer(std::shared_ptr<OpenGL::Context> context) requires (Mutable);
 
         /**
-         * @brief Creates a valid buffer/storage and completes it with
-         * your data
+         * @brief Creates buffer.
+         * @detail Creates a valid buffer with user's data.
          *
-         * @param context The valid context to check it is loaded
-         * @param data The valid pointer to the initial data
-         * @param size The non-zero size in bytes of the initial data
+         * @param context The valid context to check it is loaded;
+         * @param data Valid pointer to the initial data;
+         * @param size Valid size of the initial data, in bytes;
          *
-         * @throw std::invalid_argument If the context is invalid
-         * @throw std::invalid_argument If the data pointer is nullptr
-         * @throw std::invalid_argument If the data size is 0 or more than max_size()
+         * @throw std::invalid_argument If the context is invalid;
+         * @throw std::invalid_argument If the data pointer is nullptr;
+         * @throw std::invalid_argument If the data size is 0 or more than max_size();
          *
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::runtime_error If initialization fails
+         * @throw std::logic_error If calls not from the context creation thread;
+         * @throw std::runtime_error If initialization fails.
          */
         BasicBuffer(
             std::shared_ptr<OpenGL::Context> context,
@@ -129,78 +120,89 @@ namespace Coli::Graphics::inline OpenGL
         );
 
         /**
-         * @brief Accepts a moved buffer/storage
+         * @brief Moves buffer.
+         * @detail Moves the buffer.
          *
-         * @throw std::logic_error If moved from other thread
+         * @throw std::logic_error If moved from other thread;
          */
         BasicBuffer(BasicBuffer&&) noexcept(false);
 
-        /**
-         * @copydoc BasicBuffer(BasicBuffer&&)
-         * @return A reference to itself
-         */
+        /// @copydoc BasicBuffer(BasicBuffer&&)
         BasicBuffer& operator=(BasicBuffer&&) noexcept(false);
 
         BasicBuffer(const BasicBuffer&) = delete;
         BasicBuffer& operator=(const BasicBuffer&) = delete;
 
-        /// @brief Deletes the buffer
+        /**
+         * @brief Destroys buffer.
+         * @details Destroys the buffer.
+         */
         ~BasicBuffer() noexcept;
 
         /**
-         * @brief Gets the size of the storing data
+         * @brief Returns data size.
+         * @details Returns the size of the stored data, in bytes.
          *
-         * @throw std::invalid_argument If calls on the invalid object
+         * @throw std::invalid_argument If calls on the invalid object.
          *
-         * @return The size of the currently storing data
+         * @return Size of the currently stored data.
          */
         [[nodiscard]] size_t size() const;
 
         /**
-         * @brief Updates the buffer data with other
-         * @note If there is not enough memory the buffers reallocates it
+         * @breif Updates buffer data.
+         * @details Updates the stored buffer data with others.
+         * If there is not enough memory the buffers reallocates it
          *
-         * @param data The valid pointer to the new data
-         * @param size The non-zero size in bytes of the new data
-         * @param offset The offset off the currently storing data begin in bytes
+         * @param data Valid pointer to the new data;
+         * @param size Valid size of the new data, in bytes;
+         * @param offset Offset off the currently stored data beginning, in bytes.
          *
-         * @throw std::invalid_argument If calls on the invalid object
-         * @throw std::invalid_argument If the data pointer is nullptr
-         * @throw std::invalid_argument If the data size is 0 or more than max_size()
-         * @throw std::invalid_argument If 'size' + 'offset' is more than max_size()
-         * @throw std::invalid_argument If the data offset is more than the currently storing data size
+         * @throw std::invalid_argument If calls on the invalid object;
+         * @throw std::invalid_argument If the data pointer is nullptr;
+         * @throw std::invalid_argument If the data size is 0 or more than max_size();
+         * @throw std::invalid_argument If 'size' + 'offset' is more than max_size();
+         * @throw std::invalid_argument If the data offset is more than the currently storing data size.
          */
         void update(void const* data, size_t size, size_t offset = 0) requires (Mutable);
 
         /**
-         * @brief Frees the current buffer memory,
-         * allocates a new one, and fills it with your data
+         * @brief Recreates buffer data.
+         * @detail Frees the current buffer memory,
+         * allocates a new one, and fills it with user's data.
          *
-         * @param data The valid pointer to the new data
-         * @param size The non-zero size in bytes of the new data
+         * @param data Valid pointer to the new data;
+         * @param size Valid size of the new data, in bytes.
          *
-         * @throw std::invalid_argument If calls on the invalid object
-         * @throw std::invalid_argument If the data pointer is nullptr
-         * @throw std::invalid_argument If the data size is 0 or more than max_size()
+         * @throw std::invalid_argument If calls on the invalid object;
+         * @throw std::invalid_argument If the data pointer is nullptr;
+         * @throw std::invalid_argument If the data size is 0 or more than max_size().
          */
         void assign(void const* data, size_t size) requires (Mutable);
 
         /**
-         * @brief Gets the max size of the buffer data
-         * @return The max buffer data size value
+         * @brief Returns max data size.
+         * @brief Returns the max possible size of buffer data.
+         *
+         * @return Max buffer data size value.
          */
         [[nodiscard]] static size_t max_size() noexcept;
 
         /**
-         * @brief Binds the buffer to the graphic pipeline
+         * @brief Binds buffer.
+         * @brief Binds the buffer to the graphic pipeline.
          *
-         * @throw std::invalid_argument If calls on the invalid object
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::logic_error If another buffer is bound
+         * @throw std::invalid_argument If calls on the invalid object;
+         * @throw std::logic_error If calls not from the context creation thread;
+         * @throw std::logic_error If another buffer is bound.
          */
         void bind();
 
-        /// @brief Unbinds the bound buffer
+        /**
+         * @brief Unbinds buffer.
+         * @brief Unbinds the buffer from the graphic pipeline if
+         * the bound buffer is current.
+         */
         void unbind() noexcept;
 
     private:
@@ -218,12 +220,22 @@ namespace Coli::Graphics::inline OpenGL
     extern template class COLI_EXPORT BasicBuffer<BufferType::uniform, false>;
 #endif
 
+    /// @brief Mutable buffer storing vertices.
     using VertexBuffer = BasicBuffer<BufferType::vertex, true>;
+
+    /// @brief Mutable buffer storing indices.
     using IndexBuffer = BasicBuffer<BufferType::index, true>;
+
+    /// @brief Mutable buffer for uniform data.
     using UniformBuffer = BasicBuffer<BufferType::uniform, true>;
 
+    /// @brief Immutable buffer storing vertices.
     using VertexStorage = BasicBuffer<BufferType::vertex, false>;
+
+    /// @brief Immutable buffer storing indices.
     using IndexStorage = BasicBuffer<BufferType::index, false>;
+
+    /// @brief Immutable buffer for uniform data.
     using UniformStorage = BasicBuffer<BufferType::uniform, false>;
 }
 

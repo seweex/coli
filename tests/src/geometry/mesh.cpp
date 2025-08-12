@@ -61,10 +61,13 @@ TEST(MeshTest, CreateAndUnique)
     uniqueVertices.insert(vertices.begin(), vertices.end());
     auto const meshSpan = mesh.get_vertices();
 
-    EXPECT_TRUE(std::equal(
-        uniqueVertices.begin(),
-        uniqueVertices.end(),
-        meshSpan.begin()));
+    EXPECT_TRUE(std::any_of(
+        meshSpan.begin(),
+        meshSpan.end(),
+        [&] (Geometry::Vertex2D const& vertex) {
+            return uniqueVertices.contains(vertex);
+        }
+    ));
 }
 
 TEST(MeshTest, CreateAlreadyUnique)

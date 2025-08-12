@@ -3,6 +3,10 @@
 
 #include "coli/graphics/context.h"
 
+/**
+ * @brief For internal details.
+ * @note The user should not use this namespace.
+ */
 namespace Coli::Graphics::Detail::inline OpenGL
 {
     template <std::regular HandleTy, class DeleterTy>
@@ -16,12 +20,11 @@ namespace Coli::Graphics::Detail::inline OpenGL
         verify(std::shared_ptr<Graphics::OpenGL::Context>&& context);
 
     public:
-        /// @brief Type of the resource handle
         using handle_type = std::remove_cvref_t<HandleTy>;
 
         static_assert(
             std::same_as<handle_type, HandleTy>,
-            "Qualified or refs types are not allowed");
+            "qualified or refs types are not allowed");
 
     protected:
         [[noreturn]] static void fail_call_on_invalid();
@@ -41,8 +44,21 @@ namespace Coli::Graphics::Detail::inline OpenGL
 
         ~ResourceBase() noexcept;
 
+        /**
+         * @brief Checks validity.
+         * @detail Checks the resource validity.
+         *
+         * @return Checking result.
+         *
+         * @retval True If the resource valid;
+         * @retval False Otherwise.
+         */
         [[nodiscard]] bool is_valid() const noexcept;
 
+        /**
+         * @brief Resets resource.
+         * @detail Resets and destroys the resource and all its data.
+         */
         void clear() noexcept;
 
     protected:
@@ -63,11 +79,14 @@ namespace Coli::Graphics::Detail::inline OpenGL
 #endif
 }
 
+/// @brief Namespace for the all OpenGL-based stuff.
 namespace Coli::Graphics::inline OpenGL
 {
     /**
-     * @brief Provides RAII resources binding handle
-     * @tparam Ty Type of object to handle binding
+     * @brief RAII binding wrapper.
+     * @detail Wraps the RAII binding handle of resources.
+     *
+     * @tparam Ty Type of bindable object.
      */
     template <class Ty>
         requires (requires (Ty& obj)
@@ -78,10 +97,21 @@ namespace Coli::Graphics::inline OpenGL
     class COLI_EXPORT Binding final
     {
     public:
+        /**
+         * @brief Locks binding.
+         * @detail Creates wrapper that binds object to
+         * the graphic pipeline and locks the binding.
+         *
+         * @param object Object to bind.
+         */
         explicit Binding(Ty& object) : myObject(object) {
             myObject.bind();
         }
 
+        /**
+         * @brief Unlocks binding.
+         * @details Destroys the wrapper and unlocks the binding.
+         */
         ~Binding() noexcept {
             myObject.unbind();
         }

@@ -5,46 +5,113 @@
 
 namespace Coli::Game::Components
 {
+    /**
+     * @brief Transform component class.
+     *
+     * @details Stores object's transformations:
+     * - Position;
+     * - Rotation;
+     * - Scale.
+     *
+     * @tparam Is2D Use 2 dimensions flag. True for 2D mode,
+     * false for 3D.
+     *
+     * @note Not thread-safe. Concurrent access requires
+     * external synchronization.
+     */
     template <bool Is2D>
     class BasicTransform final
     {
     public:
-        /// @brief Default constructor, zero transformation
+        /**
+         * @brief Creates zero transformations.
+         * @details Creates a transform component and sets all
+         * values to zeroes.
+         */
         BasicTransform() noexcept;
 
-        BasicTransform(const BasicTransform&) noexcept;
-        BasicTransform(BasicTransform&&) noexcept;
+        /**
+         * @brief Copies the transform component.
+         * @details Creates a transform component and sets all
+         * values to the other's ones.
+         *
+         * @param other Other transform component.
+         */
+        BasicTransform(const BasicTransform& other) noexcept;
 
-        BasicTransform& operator=(const BasicTransform&) noexcept;
-        BasicTransform& operator=(BasicTransform&&) noexcept;
+        /**
+         * @brief Moves the transform component.
+         * @details Makes a copy of other and resets all other's values.
+         *
+         * @param other Other transform component.
+         */
+        BasicTransform(BasicTransform&& other) noexcept;
 
-        /// @brief Sets the transform to the zero state
+        /**
+         * @brief Copies the transform component's values.
+         * @details Sets the all transform component's values
+         * equal to other's ones.
+         *
+         * @param other Other transform component.
+         */
+        BasicTransform& operator=(const BasicTransform& other) noexcept;
+
+        /**
+         * @brief Moves the transform component's values.
+         * @details Sets the all transform component's values
+         * equal to other's ones.
+         *
+         * @param other Other transform component.
+         */
+        BasicTransform& operator=(BasicTransform&& other) noexcept;
+
+        /**
+         * @brief Resets the transform to zeroes.
+         * @details Sets up all component's values to the zeroes.
+         * The new transformation has no effect.
+         */
         void reset() noexcept;
 
         /**
-         * @brief Checks are the transforms equals
+         * @brief Compares two transforms.
+         * @details Compares the values of two transform components.
          *
-         * @param other Other transform to compare with
+         * @param other Component to compare.
          *
-         * @return True if the transforms are equals or false otherwise
+         * @return Compare result of two transforms.
+         *
+         * @retval True If the transforms are equal;
+         * @retval False Otherwise.
          */
         [[nodiscard]] bool operator==(const BasicTransform& other) const noexcept;
 
         /**
-         * @brief Checks are the transforms not equals
+         * @brief Compares two transforms.
+         * @details Compares the values of two transform components.
          *
-         * @param other Other transform to compare with
+         * @param other Component to compare.
          *
-         * @return True if the transforms are not equals or false otherwise
+         * @return Compare result of two transforms.
+         *
+         * @retval False If the transforms are equal;
+         * @retval True Otherwise.
          */
         [[nodiscard]] bool operator!=(const BasicTransform& other) const noexcept;
 
+        /// @brief Position value in the space
         Types::vector_type<Is2D> position;
+
+        /// @brief Scale value
         Types::vector_type<Is2D> scale;
+
+        /// @brief Rotation value in the space
         Types::rotator_type<Is2D> rotation;
     };
 
+    /// @brief Type definition for 3D transformation
     using Transform3D = BasicTransform<false>;
+
+    /// @brief Type definition for 2D transformation
     using Transform2D = BasicTransform<true>;
 
 #if COLI_BUILD

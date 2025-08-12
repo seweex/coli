@@ -8,59 +8,88 @@
 namespace Coli::Generic
 {
     /**
-     * @brief Class for managing subsystems that handles objects in a scene
+     * @brief Main game engine class.
+     * @details Processes systems passing the active scene.
+     * Manages the game state.
      *
-     * @warning This class is not thread-safe
-     */
+     * @note Not thread-safe. Concurrent access requires
+     * external synchronization.
+    */
     class COLI_EXPORT Engine final
     {
         [[noreturn]] static void fail_already_exist();
 
     public:
+        /**
+         * @brief Creates game engine.
+         * @details Creates a game engine. No active scene, no systems.
+         */
         Engine() noexcept(std::is_nothrow_default_constructible_v<decltype(mySystems)>);
 
+        /**
+         * @brief Moves game engine.
+         * @details Just moves the game engine.
+         *
+         * @param other Other game engine.
+         */
+        Engine(Engine && other) noexcept;
         Engine(Engine const &) = delete;
-        Engine(Engine &&) noexcept;
 
+        /**
+         * @brief Moves game engine.
+         * @details Just moves the game engine.
+         *
+         * @param other Other game engine.
+         * @return Reference to itself.
+         */
+        Engine &operator=(Engine && other) noexcept;
         Engine &operator=(Engine const &) = delete;
-        Engine &operator=(Engine &&) noexcept;
 
+        /**
+         * @brief Destroys game engine.
+         * @details Destroys the game engine. Destroys the systems and
+         * loses the active scene reference.
+         */
         ~Engine() noexcept;
 
         /**
-         * @brief Gets the current active scene
+         * @brief Returns active scene.
+         * @details Returns the active scene was previously set.
          *
-         * @return A weak smart pointer to current const active scene or expired if no scene
+         * @return Weak smart pointer to the active scene.
+         *
+         * @retval Valid If there is an active scene set;
+         * @retval Expired If no active scene was set.
          */
         [[nodiscard]] std::weak_ptr<Game::Scene const> active_scene() const noexcept;
 
-        /**
-         * @copybrief active_scene() const
-         *
-         * @return A weak smart pointer to current active scene or expired if no scene
-         */
+        /// @copydoc active_scene() const
         [[nodiscard]] std::weak_ptr<Game::Scene> active_scene() noexcept;
 
         /**
-         * @brief Sets the current active scene
+         * @brief Sets active scene.
+         * @details Sets the specific scene active.
+         * The engine will process objects in this scene.
          *
-         * @param scene A new scene to be processed or nullptr to reset
+         * @param scene New active scene weak pointer. Pass expired one to
+         * reset the active scene.
          */
         void active_scene(std::weak_ptr<Game::Scene> scene) noexcept;
 
         /**
-         * @brief Makes a system of the T type and returns a weak smart pointer to it
+         * @brief Makes system.
+         * @detail Makes a system of the specific type and returns a weak smart pointer to it.
          *
-         * @tparam T Type of system to add, must be derived from Coli::Generic::SystemBase
-         * @tparam Args Types of T constructor arguments
+         * @tparam T Type of system to add. It must be derived from Coli::Generic::SystemBase;
+         * @tparam Args Types of T constructor arguments.
          *
-         * @param args Arguments to a T type constructor
+         * @param args Arguments to a T type constructor.
          *
-         * @throw std::bad_alloc If allocation fails
-         * @throw std::logic_error If the system are already exists
-         * @throw T Any of T::T(Args&&...) constructor exception
+         * @throw std::bad_alloc If allocation fails;
+         * @throw std::logic_error If the system are already exists;
+         * @throw T Any of T(Args...) constructor exceptions.
          *
-         * @return A weak pointer to newly created system
+         * @return A weak pointer to the newly created system.
          */
         template <std::derived_from<SystemBase> T, class... Args>
             requires (std::constructible_from<std::remove_cvref_t<T>, Args...>)
@@ -91,11 +120,16 @@ namespace Coli::Generic
         }
 
         /**
-         * @brief Gets the system of required T type
+         * @brief Gets system.
+         * @detail Returns the system of the specific type if
+         * the game engine contains some.
          *
-         * @tparam T Type of system to get
+         * @tparam T Type of system to get. It must be derived from Coli::Generic::SystemBase.
          *
-         * @return A weak pointer to the const system if it exists, otherwise an expired pointer
+         * @return A weak smart pointer to the system.
+         *
+         * @retval Valid If there is a system of this type;
+         * @retval Expired If no systems of the T type.
          */
         template <class T>
         [[nodiscard]] std::weak_ptr<std::remove_cvref_t<T> const> get_system() const noexcept
@@ -112,20 +146,19 @@ namespace Coli::Generic
             return nullptr;
         }
 
-        /**
-         * @copydoc get_system() const
-         *
-         * @return A weak pointer to the system if it exists, otherwise an expired pointer
-         */
+        /// @copydoc get_system() const
         template <class T>
         [[nodiscard]] std::weak_ptr<std::remove_cvref_t<T>> get_system() noexcept {
-            return std::const_pointer_cast<std::remove_cvref_t<T>>(std::as_const(*this).get_system<T>().lock());
+            return std::const_pointer_cast
+                <std::remove_cvref_t<T>>(std::as_const(*this).get_system<T>().lock());
         }
 
         /**
-         * @brief Removes the system of required T type
+         * @brief Destroys system.
+         * @detail Destroys the system of the specific type if
+         * the game engine contains some.
          *
-         * @tparam T Type of system to remove
+         * @tparam T Type of system to destroy. It must be derived from Coli::Generic::SystemBase.
          */
         template <class T>
         void remove_system() noexcept
@@ -140,14 +173,17 @@ namespace Coli::Generic
         }
 
         /**
-         * @brief Starts the game loop: update all objects from the active scene
-         * by theirs systems while the stop flag is false
-         *
-         * @throw Systems Any of systems operator() exceptions
+         * @brief Runs game.
+         * @detail Runs the game loop.
+         * It is running while the running flag is True.
+         * To stop it, call @ref stop().
          */
         void run();
 
-        /// @brief Sets the stop flag to true
+        /**
+         * @brief Stops game.
+         * @detail Stops the game loop.
+         */
         void stop() noexcept;
 
     private:

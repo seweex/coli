@@ -1,6 +1,8 @@
 .idea
 build
+cmake-build-debug
 Testing
+CMakeUserPresets.json
 vcpkg-configuration.json
 vcpkg.json
 include/coli/version.h
