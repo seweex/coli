@@ -80,7 +80,7 @@ namespace Coli::Utility
         [[nodiscard]] size_t operator()(const glm::vec<L, T, Q>& v) const noexcept
         {
             constexpr HashMixer mixer;
-            size_t hash;
+            size_t hash = 0;
 
             for (glm::length_t i = 0; i < L; ++i)
                 hash = mixer(hash, Hash<T>()(v[i]));
@@ -105,7 +105,7 @@ namespace Coli::Utility
         [[nodiscard]] size_t operator()(const glm::mat<C, R, T, Q>& v) const noexcept
         {
             constexpr HashMixer mixer;
-            size_t hash;
+            size_t hash = 0;
 
             for (glm::length_t i = 0; i < C; ++i)
                 hash = mixer(hash, Hash<std::remove_cvref_t<decltype(v[i])>>()(v[i]));
