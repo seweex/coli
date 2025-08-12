@@ -4,10 +4,16 @@
 #include "coli/geometry/vertex.h"
 #include "coli/graphics/buffer.h"
 
-namespace Coli::Graphics::inline OpenGL {
+/// @brief Namespace for the all OpenGL-based stuff.
+namespace Coli::Graphics::inline OpenGL
+{
     class VertexArray;
 }
 
+/**
+ * @brief For internal details.
+ * @note The user should not use this namespace.
+ */
 namespace Coli::Graphics::Detail::inline OpenGL
 {
     struct VertexAttributes final {
@@ -16,12 +22,6 @@ namespace Coli::Graphics::Detail::inline OpenGL
         GLenum type;
     };
 
-    /**
-     * @brief A factory class for creating OpenGL vertex arrays
-     *
-     * @warning This class and all its methods are not supposed to be used by the user
-     * @note This class does not allow instances
-     */
     class VertexArrayFactory final
     {
         [[noreturn]] static void fail_initialization_error();
@@ -29,41 +29,10 @@ namespace Coli::Graphics::Detail::inline OpenGL
         [[noreturn]] static void fail_invalid_storage();
 
     public:
-        /**
-         * @brief Destroys the vertex array
-         *
-         * @param context The context that was used to create a vertex array
-         * @param handle The vertex array handle
-         */
         static void destroy(Graphics::OpenGL::Context& context, GLuint handle) noexcept;
 
-        /**
-         * @brief Creates an OpenGL vertex array
-         *
-         * @param context The valid context to check it loaded
-         *
-         * @throw std::invalid_argument If the context is invalid
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::runtime_error If initialization fails
-         *
-         * @return A valid raw handle to the newly created vertex array
-         */
         [[nodiscard]] static GLuint create(std::shared_ptr<Graphics::OpenGL::Context>& context);
 
-        /**
-         * @brief Configures the newly created vertex array
-         *
-         * @param array The created vertex array object
-         * @param vertices The vertices storage
-         * @param indices The indices storage
-         * @param vertexAttributes The vector of vertex attributes
-         * @param vertexSize The size of the vertex
-         *
-         * @throw std::invalid_argument If vertices pointer is invalid
-         * @throw std::invalid_argument If indices pointer is invalid
-         * @throw std::invalid_argument If vertex attributes has size smaller than 2
-         * @throw std::invalid_argument If vertex size is invalid
-         */
         static void configure(
             Graphics::OpenGL::VertexArray& array,
             std::shared_ptr<VertexStorage>& vertices,
@@ -85,9 +54,16 @@ namespace Coli::Graphics::Detail::inline OpenGL
     };
 }
 
+/// @brief Namespace for the all OpenGL-based stuff.
 namespace Coli::Graphics::inline OpenGL
 {
-    /// @brief OpenGL vertex array class
+    /**
+     * @brief OpenGL vertex array class.
+     * @detail Represent the vertex array objects.
+     *
+     * @note Does not allow multithreading. You should use
+     * this class from the thread where you created the context.
+     */
     class COLI_EXPORT VertexArray final :
         public Detail::OpenGL::VertexArrayFactory::resource_type
     {
@@ -139,20 +115,21 @@ namespace Coli::Graphics::inline OpenGL
 
     public:
         /**
-         * @brief Creates a valid vertex array
+         * @brief Creates vertex array.
+         * @detail Creates a valid vertex array.
          *
-         * @param context The valid context to check it is loaded
-         * @param vertices The valid pointer to vertices to use
-         * @param indices The valid pointer to indices to use
-         * @param vertexExample The example of vertex type
+         * @param context The valid context to check it is loaded;
+         * @param vertices Valid pointer to vertices to use;
+         * @param indices Valid pointer to indices to use;
+         * @param vertexExample Vertex example.
          *
-         * @throw std::invalid_argument If the context is invalid
-         * @throw std::invalid_argument If the vertices pointer is invalid
-         * @throw std::invalid_argument If the indices pointer is invalid
+         * @throw std::invalid_argument If the context is invalid;
+         * @throw std::invalid_argument If the vertices pointer is invalid;
+         * @throw std::invalid_argument If the indices pointer is invalid;
          *
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::runtime_error If initialization fails
-         * @throw std::bad_alloc If allocation fails
+         * @throw std::logic_error If calls not from the context creation thread;
+         * @throw std::runtime_error If initialization fails;
+         * @throw std::bad_alloc If allocation fails.
          */
         template <class VertexTy>
         VertexArray(
@@ -169,54 +146,62 @@ namespace Coli::Graphics::inline OpenGL
         }
 
         /**
-         * @brief Accepts a moved vertex array
+         * @brief Moves vertex array.
+         * @detail Moves the vertex array.
          *
-         * @throw std::logic_error If moved from other thread
+         * @throw std::logic_error If moved from other thread;
          */
         VertexArray(VertexArray&&) noexcept(false);
 
-        /**
-         * @copydoc VertexArray(VertexArray&&)
-         * @return A reference to itself
-         */
+        /// @copydoc VertexArray(VertexArray&&)
         VertexArray& operator=(VertexArray&&) noexcept(false);
 
         VertexArray(const VertexArray&) = delete;
         VertexArray& operator=(const VertexArray&) = delete;
 
-        /// @brief Deletes the vertex array
+        /**
+         * @brief Destroys buffer.
+         * @details Destroys the buffer.
+         */
         ~VertexArray() noexcept;
 
         /**
-         * @brief Gets the currently used vertices storage
+         * @brief Returns vertex buffer.
+         * @details Returns the currently used vertex buffer.
          *
-         * @throw std::invalid_argument If calls on invalid object
+         * @throw std::invalid_argument If calls on invalid object.
          *
-         * @return Weak pointer to used vertices storage
+         * @return Unexpired weak pointer to used vertices storage.
          */
         [[nodiscard]] std::weak_ptr<VertexStorage>
         get_vertices();
 
         /**
-         * @brief Gets the currently used indices storage
+         * @brief Returns index buffer.
+         * @details Returns the currently used index buffer.
          *
-         * @throw std::invalid_argument If calls on invalid object
+         * @throw std::invalid_argument If calls on invalid object.
          *
-         * @return Weak pointer to used indices storage
+         * @return Unexpired weak pointer to used index storage.
          */
         [[nodiscard]] std::weak_ptr<IndexStorage>
         get_indices();
 
         /**
-         * @brief Binds the vertex array to the graphic pipeline
+         * @brief Binds vertex array.
+         * @brief Binds the vertex array to the graphic pipeline.
          *
-         * @throw std::invalid_argument If calls on the invalid object
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::logic_error If another vertex array is bound
+         * @throw std::invalid_argument If calls on the invalid object;
+         * @throw std::logic_error If calls not from the context creation thread;
+         * @throw std::logic_error If another vertex array is bound.
          */
         void bind();
 
-        /// @brief Unbinds the bound vertex array
+        /**
+         * @brief Unbinds vertex array.
+         * @brief Unbinds the vertex array from the graphic pipeline if
+         * the bound vertex array is current.
+         */
         void unbind() noexcept;
 
         /// @copydoc Coli::Graphics::Detail::OpenGL::ResourceBase::clear
