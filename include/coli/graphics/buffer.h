@@ -42,25 +42,8 @@ namespace Coli::Graphics::Detail::inline OpenGL
         [[noreturn]] static void fail_invalid_context();
 
     public:
-        /**
-         * @brief Destroys the buffer
-         *
-         * @param context The context that was used to create a buffer/storage
-         * @param handle The buffer/storage handle
-         */
         static void destroy(Graphics::OpenGL::Context& context, GLuint handle) noexcept;
 
-        /**
-         * @brief Creates an OpenGL buffer/storage
-         *
-         * @param context The valid context to check it loaded
-         *
-         * @throw std::invalid_argument If the context is invalid
-         * @throw std::logic_error If calls not from the context creation thread
-         * @throw std::runtime_error If initialization fails
-         *
-         * @return A valid raw handle to the newly created buffer/storage
-         */
         [[nodiscard]] static GLuint
         create(std::shared_ptr<Graphics::OpenGL::Context>& context);
 
@@ -77,6 +60,7 @@ namespace Coli::Graphics::Detail::inline OpenGL
     };
 }
 
+/// @brief Namespace for the all OpenGL-based stuff.
 namespace Coli::Graphics::inline OpenGL
 {
     /**
