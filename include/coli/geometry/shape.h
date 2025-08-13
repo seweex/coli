@@ -94,7 +94,7 @@ namespace Coli::Geometry
         *
         * @throw std::invalid_argument If at least one component of sizes not greater than 0.
         */
-        Shape(CylinderTag, vector_type const& sizes) requires Is2D;
+        Shape(CylinderTag, vector_type const& sizes) requires !Is2D;
 
         Shape(Shape&&) = delete;
         Shape(Shape const&) = delete;

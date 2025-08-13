@@ -61,7 +61,7 @@ namespace Coli::Geometry
     }
 
     template <bool Is2D>
-    Shape<Is2D>::Shape(CylinderTag, vector_type const& sizes) noexcept requires Is2D :
+    Shape<Is2D>::Shape(CylinderTag, vector_type const& sizes) noexcept requires !Is2D :
         myShape(std::in_place_type<btCylinderShapeZ>, btVector3(
             static_cast<btScalar>(sizes.x) / 2.f,
             static_cast<btScalar>(sizes.y) / 2.f,
