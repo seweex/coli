@@ -13,6 +13,7 @@
 
 - Tests:
   - Removed grouping tests
+  - Tests for new physics
 - Dependencies:
   - New dependency: `bullet3`
 - Physics:

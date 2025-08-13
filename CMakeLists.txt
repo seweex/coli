@@ -46,7 +46,7 @@ set (COLI_SOURCES
 
         src/physics/world.cpp
         src/physics/body.cpp
-        src/graphics/shape.cpp
+        src/geometry/shape.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
