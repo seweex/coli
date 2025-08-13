@@ -10,6 +10,15 @@ namespace Coli::Physics
     }
 
     template <bool Is2D>
+    void Body<Is2D>::bind_to_world(btDynamicsWorld* world) noexcept
+    {
+        if (!myWorld) {
+            myWorld = world;
+            world->addRigidBody(std::addressof(myRigidBody));
+        }
+    }
+
+    template <bool Is2D>
     std::shared_ptr<Geometry::Shape<Is2D>>
     Body<Is2D>::verify_shape(std::weak_ptr<Geometry::Shape<Is2D>> const& shape)
     {
@@ -63,8 +72,15 @@ namespace Coli::Physics
             static_cast<btScalar>(mass),
             std::addressof(myMotionState),
             myShape.get(),
-            get_inertia(mass, myShape) })
+            get_inertia(mass, myShape) }),
+        myWorld (nullptr)
     {}
+
+    template <bool Is2D>
+    Body<Is2D>::~Body() noexcept {
+        if (myWorld)
+            myWorld->removeRigidBody(std::addressof(myRigidBody));
+    }
 
     template <bool Is2D>
     std::weak_ptr<Geometry::Shape<Is2D>> Body<Is2D>::shape() const noexcept {

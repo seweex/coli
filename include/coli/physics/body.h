@@ -31,6 +31,8 @@ namespace Coli::Physics
         [[nodiscard]] static btVector3
         get_inertia(float_type mass, std::shared_ptr<Geometry::Shape<Is2D>> shape) noexcept;
 
+        void bind_to_world(btDynamicsWorld* world) noexcept;
+
     public:
         /**
          * @brief Creates body.
@@ -51,6 +53,12 @@ namespace Coli::Physics
 
         Body& operator=(Body&&) = delete;
         Body& operator=(const Body&) = delete;
+
+        /**
+         * @brief Destroys body.
+         * @details Destroys the physical body and unregister it from the world.
+         */
+        ~Body() noexcept;
 
         /**
          * @brief Returns shape.
@@ -74,6 +82,8 @@ namespace Coli::Physics
         btDefaultMotionState myMotionState;
         std::shared_ptr<Geometry::Shape<Is2D>> myShape;
         btRigidBody myRigidBody;
+
+        btDynamicsWorld* myWorld;
     };
 
 #if COLI_BUILD
