@@ -59,4 +59,8 @@ namespace Coli::Utility
         if (myFlag)
             myObject.myFlag.clear(std::memory_order::memory_order_release);
     }
+
+    LockFreeTaker::operator bool() const noexcept {
+        return myFlag;
+    }
 }

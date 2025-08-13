@@ -188,6 +188,8 @@ namespace Coli::Utility
 
         ~LockFreeTaker() noexcept;
 
+        [[nodiscard]] operator bool() const noexcept;
+
     private:
         LockFreeBase& myObject;
         bool myFlag;
