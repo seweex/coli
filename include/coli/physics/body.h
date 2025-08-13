@@ -29,7 +29,7 @@ namespace Coli::Physics
         make_transform(vector_type const& position) noexcept;
 
         [[nodiscard]] static btVector3
-        get_inertia(float_type mass, std::shared_ptr<Geometry::Shape<Is2D>> shape) noexcept;
+        get_inertia(float_type mass, std::shared_ptr<Geometry::Shape<Is2D>> shape);
 
         void bind_to_world(btDynamicsWorld* world) noexcept;
 

@@ -35,21 +35,21 @@ namespace Coli::Physics
         btVector3 pos;
 
         if constexpr (Is2D) {
-            pos.setX(static_cast<btScalar>(position.x()));
-            pos.setY(static_cast<btScalar>(position.y()));
-            pos.setZ(static_cast<btScalar>(position.z()));
+            pos.setX(static_cast<btScalar>(position.x));
+            pos.setY(static_cast<btScalar>(position.y));
+            pos.setZ(0.f);
         }
         else {
-            pos.setX(static_cast<btScalar>(position.x()));
-            pos.setY(static_cast<btScalar>(position.y()));
-            pos.setZ(0);
+            pos.setX(static_cast<btScalar>(position.x));
+            pos.setY(static_cast<btScalar>(position.y));
+            pos.setZ(static_cast<btScalar>(position.z));
         }
 
         return btTransform { rot, pos };
     }
 
     template <bool Is2D>
-    btVector3 Body<Is2D>::get_inertia(float_type mass, std::shared_ptr<Geometry::Shape<Is2D>> shape) noexcept
+    btVector3 Body<Is2D>::get_inertia(float_type mass, std::shared_ptr<Geometry::Shape<Is2D>> shape)
     {
         if (!(mass >= 0))
             fail_invalid_argument("Mass must be not less than 0");
@@ -68,11 +68,13 @@ namespace Coli::Physics
     Body<Is2D>::Body(float_type mass, vector_type const& position, std::weak_ptr<Geometry::Shape<Is2D>> shape) :
         myMotionState (make_transform(position)),
         myShape       (verify_shape(shape)),
-        myRigidBody   (btRigidBody::btRigidBodyConstructionInfo{
-            static_cast<btScalar>(mass),
-            std::addressof(myMotionState),
-            myShape.get(),
-            get_inertia(mass, myShape) }),
+        myRigidBody   (
+            btRigidBody::btRigidBodyConstructionInfo{
+                static_cast<btScalar>(mass),
+                std::addressof(myMotionState),
+                myShape->get(),
+                get_inertia(mass, myShape)
+            }),
         myWorld (nullptr)
     {}
 
@@ -91,4 +93,7 @@ namespace Coli::Physics
     void Body<Is2D>::shape(std::weak_ptr<Geometry::Shape<Is2D>> newValue) {
         myShape = verify_shape(newValue);
     }
+
+    template class COLI_EXPORT Body<true>;
+    template class COLI_EXPORT Body<false>;
 }
