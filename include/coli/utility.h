@@ -154,6 +154,44 @@ namespace Coli::Utility
     extern template class COLI_EXPORT Hash<Types::rotator_type<true>>;
     extern template class COLI_EXPORT Hash<Types::rotator_type<false>>;
 #endif
+
+    class COLI_EXPORT LockFreeBase
+    {
+    protected:
+        LockFreeBase() noexcept;
+
+    public:
+        LockFreeBase(LockFreeBase const&) noexcept;
+        LockFreeBase(LockFreeBase&&) noexcept;
+
+        LockFreeBase& operator=(LockFreeBase const&) noexcept;
+        LockFreeBase& operator=(LockFreeBase&&) noexcept;
+
+    private:
+        std::atomic_flag myFlag = ATOMIC_FLAG_INIT;
+
+        friend class LockFreeTaker;
+    };
+
+    class COLI_EXPORT LockFreeTaker final
+    {
+    public:
+        LockFreeTaker() = delete;
+
+        LockFreeTaker(LockFreeBase& object) noexcept;
+
+        LockFreeTaker(LockFreeTaker&&) = delete;
+        LockFreeTaker(const LockFreeTaker&) = delete;
+
+        LockFreeTaker& operator=(LockFreeTaker&&) = delete;
+        LockFreeTaker& operator=(const LockFreeTaker&) = delete;
+
+        ~LockFreeTaker() noexcept;
+
+    private:
+        LockFreeBase& myObject;
+        bool myFlag;
+    };
 }
 
 #endif
