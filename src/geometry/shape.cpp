@@ -8,17 +8,17 @@ namespace Coli::Geometry
     }
 
     template <bool Is2D>
-    btCollisionShape* Shape<Is2D>::get() const noexcept
+    btCollisionShape* Shape<Is2D>::get() noexcept
     {
-        auto visitor = [] (auto&& shape) {
-            return static_cast<btCollisionShape *>(std::addressof(shape));
+        auto visitor = [] (auto& shape) {
+            return static_cast<btCollisionShape*>(std::addressof(shape));
         };
 
         return std::visit(visitor, myShape);
     }
 
     template <bool Is2D>
-    Shape<Is2D>::Shape(SphereTag, float_type radius) noexcept :
+    Shape<Is2D>::Shape(SphereTag, float_type radius) :
         myShape(std::in_place_type<btSphereShape>, static_cast<btScalar>(radius))
     {
         if (!(radius > 0))
@@ -26,7 +26,7 @@ namespace Coli::Geometry
     }
 
     template <>
-    Shape<false>::Shape(BoxTag, vector_type const& sizes) noexcept :
+    Shape<false>::Shape(BoxTag, vector_type const& sizes) :
         myShape(std::in_place_type<btBoxShape>, btVector3(
             static_cast<btScalar>(sizes.x) / 2.f,
             static_cast<btScalar>(sizes.y) / 2.f,
@@ -38,7 +38,7 @@ namespace Coli::Geometry
     }
 
     template <>
-    Shape<true>::Shape(BoxTag, vector_type const& sizes) noexcept :
+    Shape<true>::Shape(BoxTag, vector_type const& sizes) :
         myShape(std::in_place_type<btBoxShape>, btVector3(
             static_cast<btScalar>(sizes.x) / 2.f,
             static_cast<btScalar>(sizes.y) / 2.f,
@@ -50,7 +50,7 @@ namespace Coli::Geometry
     }
 
     template <bool Is2D>
-    Shape<Is2D>::Shape(CapsuleTag, float_type radius, float_type height) noexcept :
+    Shape<Is2D>::Shape(CapsuleTag, float_type radius, float_type height) :
         myShape(std::in_place_type<btCapsuleShapeZ>, static_cast<btScalar>(radius), static_cast<btScalar>(height))
     {
         if (!(radius > 0))
@@ -61,7 +61,7 @@ namespace Coli::Geometry
     }
 
     template <bool Is2D>
-    Shape<Is2D>::Shape(CylinderTag, vector_type const& sizes) noexcept requires !Is2D :
+    Shape<Is2D>::Shape(CylinderTag, vector_type const& sizes) requires (!Is2D) :
         myShape(std::in_place_type<btCylinderShapeZ>, btVector3(
             static_cast<btScalar>(sizes.x) / 2.f,
             static_cast<btScalar>(sizes.y) / 2.f,
