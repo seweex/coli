@@ -11,6 +11,12 @@
 
 ### v0.2.8 - **Under develop**
 
+- Systems:
+  - Now systems must request components using templates
+- Scenes:
+  - Removed ordering method from scene
+  - Changed filtering method in scene
+  - Added verifying for scenes
 - Tests:
   - Removed grouping tests
   - Tests for new physics

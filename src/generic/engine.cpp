@@ -35,12 +35,8 @@ namespace Coli::Generic
 
         while (!myStopFlag)
             if (auto const scene = myScene.lock()) [[likely]]
-            {
-                auto& object = scene->ordered();
-
                 for (auto const& system : mySystems | std::views::values)
-                    (*system)(object);
-            }
+                    system->execute(*scene);
             else
                 break;
     }

@@ -64,25 +64,21 @@ class SpecialComponent { /* ... */ };
 
 // make your system class
 class SpecialSystem :
-    public Generic::SystemBase
+    // request your component
+    public Generic::SystemBase <SpecialComponent>
 {
 public:
     /* ... */
     
-    void operator()(std::vector<Game::ObjectHandle>& objects) override
+    // set up processing for each objects
+    void process(SpecialComponent& component)
     {
-        for (auto& object : objects)
-        {
-            try {
-                auto& specialComponent = object.get<SpecialComponent>();
-                /* ... */
-            }
-            // no `SpecialComponent` in this `object`
-            catch (std::invalid_argument const& exception) {
-                continue;
-            }
-        }
-        
+        /* ... */
+    }
+    
+    // set up updating after processing all objects
+    void update()
+    {
         engine.stop();
     }
 };
