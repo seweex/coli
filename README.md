@@ -41,6 +41,7 @@ It uses modern C++20 and based on ECS (Entity-Component-System).
 
 This project uses the following open-source solutions:
 
+- **[bullet3](http://bulletphysics.org)**: Uses its physical (License: Zlib)
 - **[EnTT](https://github.com/skypjack/entt)**: Based on provided ECS (License: MIT)
 - **[glm](https://github.com/g-truc/glm)**: Uses the glm math (License: Modified MIT)
 - **[glfw](https://github.com/glfw/glfw)**: Manages windows and the context (License: Zlib)
@@ -63,25 +64,21 @@ class SpecialComponent { /* ... */ };
 
 // make your system class
 class SpecialSystem :
-    public Generic::SystemBase
+    // request your component
+    public Generic::SystemBase <SpecialComponent>
 {
 public:
     /* ... */
     
-    void operator()(std::vector<Game::ObjectHandle>& objects) override
+    // set up processing for each objects
+    void process(SpecialComponent& component)
     {
-        for (auto& object : objects)
-        {
-            try {
-                auto& specialComponent = object.get<SpecialComponent>();
-                /* ... */
-            }
-            // no `SpecialComponent` in this `object`
-            catch (std::invalid_argument const& exception) {
-                continue;
-            }
-        }
-        
+        /* ... */
+    }
+    
+    // set up updating after processing all objects
+    void update()
+    {
         engine.stop();
     }
 };
@@ -116,6 +113,7 @@ int main()
 Before you install the `coli` library make sure you have all the following
 libs, and it is able to `find_package()` for all of them:
 
+- `Bullet` (bullet3)
 - `EnTT`
 - `glm`
 - `glfw`

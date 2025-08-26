@@ -19,4 +19,7 @@
 #include "coli/geometry/vertex.h"
 #include "coli/geometry/mesh.hpp"
 
+#include "coli/physics/body.h"
+#include "coli/physics/world.h"
+
 #endif

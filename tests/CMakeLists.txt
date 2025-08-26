@@ -19,10 +19,14 @@ add_executable(coli-test-graphics-shader         src/graphics/shader.cpp)
 add_executable(coli-test-graphics-program        src/graphics/program.cpp)
 add_executable(coli-test-graphics-vertex-array   src/graphics/vertex_array.cpp)
 
-add_executable(coli-test-game-object    src/game/object.cpp)
+add_executable(coli-test-game-object    src/game/object.cpp
+)
 add_executable(coli-test-game-scene     src/game/scene.cpp)
 
 add_executable(coli-test-geometry-mesh  src/geometry/mesh.cpp)
+add_executable(coli-test-geometry-shape  src/geometry/shape.cpp)
+
+add_executable(coli-test-physics-body  src/physics/body.cpp)
 
 set (COLI_ALL_TEST_NAMES
         coli-test-graphics-context
@@ -36,6 +40,9 @@ set (COLI_ALL_TEST_NAMES
         coli-test-game-scene
 
         coli-test-geometry-mesh
+        coli-test-geometry-shape
+
+        coli-test-physics-body
 )
 
 foreach (target IN LISTS COLI_ALL_TEST_NAMES)
@@ -56,25 +63,7 @@ add_test(NAME coli-graphics-vertex-array COMMAND coli-test-graphics-vertex-array
 add_test(NAME coli-game-object COMMAND coli-test-game-object)
 add_test(NAME coli-game-scene COMMAND coli-test-game-scene)
 
-add_test(NAME coli-geometry-mesh COMMAND coli-test-geometry-mesh )
+add_test(NAME coli-geometry-mesh COMMAND coli-test-geometry-mesh)
+add_test(NAME coli-geometry-shape COMMAND coli-test-geometry-shape)
 
-add_test(NAME coli-graphics
-    COMMAND
-        ${CMAKE_CTEST_COMMAND}
-        --output-on-failure
-        -R "^coli-graphics-"
-)
-
-add_test(NAME coli-game
-    COMMAND
-        ${CMAKE_CTEST_COMMAND}
-        --output-on-failure
-        -R "^coli-game-"
-)
-
-add_test(NAME coli-geometry
-        COMMAND
-        ${CMAKE_CTEST_COMMAND}
-        --output-on-failure
-        -R "^coli-geometry-"
-)
+add_test(NAME coli-physics-body COMMAND coli-test-physics-body)

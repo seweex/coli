@@ -11,7 +11,7 @@ endif()
 
 set(COLI_VERSION_MAJOR 0)
 set(COLI_VERSION_MINOR 2)
-set(COLI_VERSION_PATCH 7)
+set(COLI_VERSION_PATCH 8)
 
 project(coli VERSION ${COLI_VERSION_MAJOR}.${COLI_VERSION_MINOR}.${COLI_VERSION_PATCH} LANGUAGES CXX C)
 
@@ -43,6 +43,10 @@ set (COLI_SOURCES
         src/graphics/program.cpp
         src/graphics/vertex_array.cpp
         src/geometry/vertex.cpp
+
+        src/physics/world.cpp
+        src/physics/body.cpp
+        src/geometry/shape.cpp
 )
 
 if (COLI_BUILD_DYNAMIC)
@@ -88,12 +92,14 @@ target_compile_definitions(coli-game-engine PRIVATE COLI_OPENGL_VERSION_MINOR=${
 find_package(EnTT CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
+find_package(Bullet CONFIG REQUIRED)
 
 target_link_libraries(coli-game-engine PUBLIC
         coli::glad
         EnTT::EnTT
         glm::glm
         glfw
+        ${BULLET_LIBRARIES}
 )
 
 target_include_directories(coli-game-engine PUBLIC

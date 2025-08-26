@@ -9,7 +9,24 @@
 
 ## Changelogs
 
-### v0.2.7 - **Current**
+### v0.2.8 - **Current**
+
+- Systems:
+  - Now systems must request components using templates
+- Scenes:
+  - Removed ordering method from scene
+  - Changed filtering method in scene
+  - Added verifying for scenes
+- Tests:
+  - Removed grouping tests
+  - Tests for new physics
+- Dependencies:
+  - New dependency: `bullet3`
+- Physics:
+  - Added new physical opportunities: `World`, `Body`, and 
+    geometry `Shape`
+
+### v0.2.7
 
 - Fixes:
   - Fixed the `MeshTest.CreateAndUnique` result checking

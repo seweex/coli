@@ -91,7 +91,7 @@ namespace Coli::Generic
          *
          * @return A weak pointer to the newly created system.
          */
-        template <std::derived_from<SystemBase> T, class... Args>
+        template <std::derived_from<Detail::SystemBase> T, class... Args>
             requires (std::constructible_from<std::remove_cvref_t<T>, Args...>)
         std::weak_ptr<std::remove_cvref_t<T>> make_system(Args&&... args)
         {
@@ -187,9 +187,11 @@ namespace Coli::Generic
         void stop() noexcept;
 
     private:
-        std::unordered_map<std::type_index, std::shared_ptr<SystemBase>> mySystems;
-        std::weak_ptr<Game::Scene> myScene;
+        std::unordered_map<std::type_index,
+                           std::shared_ptr<Detail::SystemBase>>
+        mySystems;
 
+        std::weak_ptr<Game::Scene> myScene;
         volatile /* <- temp */ bool myStopFlag;
     };
 }

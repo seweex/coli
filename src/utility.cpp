@@ -36,4 +36,31 @@ namespace Coli::Utility
     template class COLI_EXPORT Hash<Types::vector_type<false>>;
 
     template class COLI_EXPORT Hash<Types::rotator_type<false>>;
+
+    LockFreeBase::LockFreeBase() noexcept = default;
+
+    LockFreeBase::LockFreeBase(LockFreeBase const&) noexcept :
+        LockFreeBase()
+    {}
+
+    LockFreeBase::LockFreeBase(LockFreeBase&&) noexcept :
+        LockFreeBase()
+    {}
+
+    LockFreeBase& LockFreeBase::operator=(LockFreeBase const&) noexcept { return *this; }
+    LockFreeBase& LockFreeBase::operator=(LockFreeBase&&) noexcept { return *this; }
+
+    LockFreeTaker::LockFreeTaker(LockFreeBase& object) noexcept :
+        myObject (object),
+        myFlag   (!object.myFlag.test_and_set(std::memory_order::memory_order_acquire))
+    {}
+
+    LockFreeTaker::~LockFreeTaker() noexcept {
+        if (myFlag)
+            myObject.myFlag.clear(std::memory_order::memory_order_release);
+    }
+
+    LockFreeTaker::operator bool() const noexcept {
+        return myFlag;
+    }
 }

@@ -2,6 +2,31 @@
 #define COLI_GENERIC_SYSTEM_H
 
 #include "coli/game/object.h"
+#include "coli/game/scene.h"
+
+/**
+ * @brief For internal details.
+ * @note The user should not use this namespace.
+ */
+namespace Coli::Generic::Detail
+{
+    class COLI_EXPORT SystemBase
+    {
+    protected:
+        SystemBase() noexcept;
+
+    public:
+        SystemBase(SystemBase&&) noexcept;
+        SystemBase(const SystemBase&) noexcept;
+
+        SystemBase& operator=(SystemBase&&) noexcept;
+        SystemBase& operator=(const SystemBase&) noexcept;
+
+        virtual ~SystemBase() noexcept;
+
+        virtual void execute(Game::Scene& scene) = 0;
+    };
+}
 
 /// @brief Namespace for the all generic for game engines stuff.
 namespace Coli::Generic
@@ -16,7 +41,10 @@ namespace Coli::Generic
      *
      * @note Interface base. No direct instances are allowed.
     */
-    class COLI_EXPORT SystemBase
+    template <class... ComponentTys>
+        requires (sizeof...(ComponentTys) > 0)
+    class COLI_EXPORT SystemBase :
+        public Detail::SystemBase
     {
     protected:
         /**
@@ -24,47 +52,70 @@ namespace Coli::Generic
          * @details Default constructor. Call it from your
          * derived classes.
          */
-        SystemBase() noexcept;
+        SystemBase() noexcept = default;
 
     public:
         /**
          * @detail Copies system base.
          * @details Has the default implementation.
          */
-        SystemBase(SystemBase const&) noexcept;
+        SystemBase(SystemBase const&) noexcept = default;
 
         /**
          * @detail Moves system base.
          * @details Has the default implementation.
          */
-        SystemBase(SystemBase&&) noexcept;
+        SystemBase(SystemBase&&) noexcept = default;
 
         /**
          * @detail Copies system base.
          * @details Has the default implementation.
          */
-        SystemBase& operator=(SystemBase const&) noexcept;
+        SystemBase& operator=(SystemBase const&) noexcept = default;
 
         /**
          * @detail Moves system base.
          * @details Has the default implementation.
          */
-        SystemBase& operator=(SystemBase&&) noexcept;
+        SystemBase& operator=(SystemBase&&) noexcept = default;
 
         /**
          * @detail Destroys system base.
          * @details Has the default implementation.
          */
-        virtual ~SystemBase() noexcept;
+        ~SystemBase() noexcept override = default;
 
         /**
-         * @brief Processing method.
-         * @detail Virtual processing method. Override this method to
-         * specify your system's behavior.
+         * @brief Processes components in one object.
+         * @details Processes the user-required components in an object.
+         * It calls for each object that has all of required components many
+         * times per frame.
          *
-         * @param object Sorted objects storing in the processed scene.
+         * @param components Required components to process.
          */
-        virtual void operator()(std::vector<Game::ObjectHandle>& object) = 0;
+        virtual void process(ComponentTys&... components) = 0;
+
+        /**
+         * @brief Updates system.
+         * @details Updates the system. Calls once per frame after
+         * processing all objects.
+         */
+        virtual void update() = 0;
+
+        /**
+         * @brief Executes the system.
+         * @note The user should not use this method.
+         */
+        void execute(Game::Scene& scene) override
+        {
+            auto objects = scene.filtered<ComponentTys...>();
+
+            objects.each([&] (auto&... components) {
+                this->process(components...);
+            });
+
+            this->update();
+        }
     };
 }
 

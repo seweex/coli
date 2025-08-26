@@ -1,9 +1,7 @@
 #include "coli/generic/system.h"
 
-namespace Coli::Generic
+namespace Coli::Generic::Detail
 {
-    /* System Base */
-
     SystemBase::SystemBase() noexcept = default;
 
     SystemBase::SystemBase(SystemBase const&) noexcept = default;
