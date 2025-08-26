@@ -9,7 +9,7 @@
 
 ## Changelogs
 
-### v0.2.8 - **Under develop**
+### v0.2.8 - **Current**
 
 - Systems:
   - Now systems must request components using templates
@@ -26,7 +26,7 @@
   - Added new physical opportunities: `World`, `Body`, and 
     geometry `Shape`
 
-### v0.2.7 - **Current**
+### v0.2.7
 
 - Fixes:
   - Fixed the `MeshTest.CreateAndUnique` result checking
